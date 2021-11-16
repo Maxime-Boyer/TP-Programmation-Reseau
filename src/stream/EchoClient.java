@@ -6,9 +6,10 @@
  */
 package stream;
 
+import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.net.*;
-
+import java.sql.SQLOutput;
 
 
 public class EchoClient {
@@ -46,9 +47,13 @@ public class EchoClient {
             System.exit(1);
         }
 
+        System.out.println("avant while");
+
         String line;
         while (true) {
+            System.out.println("dans while");
             line=stdIn.readLine();
+            System.out.println("line : " + line);
             if (line.equals(".")) break;
             socOut.println(line);
             System.out.println("echo: " + socIn.readLine());

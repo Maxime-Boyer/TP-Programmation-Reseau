@@ -1,4 +1,4 @@
-/***
+package stream_multithread; /***
  * ClientThread
  * Example of a TCP server
  * Date: 14/12/08
@@ -8,8 +8,7 @@
 import java.io.*;
 import java.net.*;
 
-public class ClientThread
-        extends Thread {
+public class ClientThread extends Thread {
 
     private Socket clientSocket;
 

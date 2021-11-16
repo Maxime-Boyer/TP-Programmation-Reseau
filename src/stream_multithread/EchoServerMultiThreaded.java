@@ -1,4 +1,4 @@
-/***
+package stream_multithread; /***
  * EchoServer
  * Example of a TCP server
  * Date: 10/01/04
