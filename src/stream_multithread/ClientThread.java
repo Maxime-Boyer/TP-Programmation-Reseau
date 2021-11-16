@@ -82,11 +82,11 @@ public class ClientThread extends Thread {
                         case MENU_LISTER_CONVERSATIONS:
                             afficherMenuListerConversations(socOut);
                             System.out.println("back in switch");
-                            etat = EtatsPossibles.MENU_INITIAL;
+                            retourEtatInitial();
                             break;
                         case MENU_LISTER_UTILISATEURS:
                             afficherMenuListerUtilisateurs(socOut);
-                            etat = EtatsPossibles.MENU_INITIAL;
+                            retourEtatInitial();
                             break;
                         case MENU_CONVERSATION:
                             afficherMenuConversation(socOut);
@@ -109,6 +109,11 @@ public class ClientThread extends Thread {
         } catch (Exception e) {
             System.err.println("Error in EchoServer:" + e);
         }
+    }
+
+    public void retourEtatInitial(){
+        etat = EtatsPossibles.MENU_INITIAL;
+        afficherMenu = true;
     }
 
     public void afficherMenuInitial(PrintStream socOut){
