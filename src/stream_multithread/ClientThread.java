@@ -7,6 +7,7 @@ package stream_multithread; /***
 
 import java.io.*;
 import java.net.*;
+import java.sql.SQLOutput;
 
 public class ClientThread extends Thread {
 
@@ -28,6 +29,7 @@ public class ClientThread extends Thread {
             PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
             while (true) {
                 String line = socIn.readLine();
+                System.out.println("line : " + line);
                 socOut.println(line);
             }
         } catch (Exception e) {
