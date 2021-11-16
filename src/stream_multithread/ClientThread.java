@@ -73,6 +73,7 @@ public class ClientThread extends Thread {
 
             while (line != null) {
                 if(afficherMenu){
+                    System.out.println(etat);
                     switch (etat){
                         case MENU_INITIAL:
                             afficherMenuInitial(socOut);
@@ -185,11 +186,38 @@ public class ClientThread extends Thread {
     }
 
     public void creerConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
-        socOut.println("Entrez le nom de la conversation que vous souhaitez créer:");
-        socOut.println(FIN_AFFICHAGE);
-        String line = socIn.readLine();
-        System.out.println("Nouvelle conversation: "+line);
-        etat = EtatsPossibles.MENU_INITIAL;
+
+        String line = "";
+        // tant que l'entree utilisateur ne contient pas un seul caractere lisible, on lui demande une entree
+        while(!line.matches(".*[0-9a-zA-Z]+.*")){
+            socOut.println(" ");
+            socOut.println("Entrez le nom de la conversation que vous souhaitez créer:");
+            socOut.println(FIN_AFFICHAGE);
+            line = socIn.readLine();
+        }
+
+        // rechercher si la conversation existe
+        Conversation conversation;
+        boolean conversationExiste = false;
+        for(int i = 0; i < serveur.getListeConversations().size(); i++){
+            conversation = serveur.getListeConversations().get(i);
+
+            // si une conversation existe avec ce nom, retour état d'avant
+            if(conversation.getNomConversation().equals(line)){
+                conversationExiste = true;
+                socOut.println("La conversation '"+line+"' existe deja. Rejoignez là ou créez en une autre.");
+                etat = EtatsPossibles.MENU_CONVERSATION;
+                break;
+            }
+        }
+
+        if(!conversationExiste){
+            // si elle n'existe pas, on la crée
+            serveur.ajouterConversations(line);
+            socOut.println("Conversation '"+line+"' créée.");
+            etat = EtatsPossibles.MENU_INITIAL;     //TODO: raccorder à l'envoie d'un message
+        }
+
         afficherMenu = true;
     }
 

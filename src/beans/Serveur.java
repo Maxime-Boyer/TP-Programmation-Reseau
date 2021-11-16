@@ -23,6 +23,11 @@ public class Serveur {
         return listeConversations;
     }
 
+    public void ajouterConversations(String nomConversation){
+        Conversation conversation = new Conversation(nomConversation);
+        listeConversations.add(conversation);
+    }
+
     public void connecterUtilisateur(String nomUtilisateur){
         System.out.println("\nConnexion de l'utilisateur: " + nomUtilisateur);
         if (!listeNomsUtilisateurs.contains(nomUtilisateur)) {
