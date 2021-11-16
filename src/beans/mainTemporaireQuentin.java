@@ -4,6 +4,10 @@ public class mainTemporaireQuentin {
 
     public static void main(String args[]) throws InterruptedException {
 
+        /**************************************************************************/
+        /*                  Scénario 1: conversation de groupe                    */
+        /**************************************************************************/
+
         // création d'une conversation
         Conversation conversationGroupe = new Conversation("TP prog réseaux");
 
@@ -27,5 +31,25 @@ public class mainTemporaireQuentin {
         // Affichage des messages de la conversation
         conversationGroupe.afficherMessages();
 
+
+        /**************************************************************************/
+        /*                    Scénario 2: conversation privée                     */
+        /**************************************************************************/
+        System.out.println("\n\n--------------------------------------------------------------\n\n");
+        Conversation conversationPrive = new Conversation("Quentin", "Maxime");
+
+        // affichage du nom de la conversation
+        System.out.println("\nNom de la conversation:");
+        System.out.println(conversationPrive.getNomConversation());
+
+        // affichage des utilisateurs participant à la conversation
+        conversationPrive.afficherListeParticipants();
+
+        conversationPrive.ajouterMessage("Quentin", "Hello max, on taffe ce matin?");
+        conversationPrive.ajouterMessage("Maxime", "Flemme...");
+        conversationPrive.ajouterMessage("Quentin", "Pas le choix");
+
+        // Affichage des messages de la conversation
+        conversationPrive.afficherMessages();
     }
 }
