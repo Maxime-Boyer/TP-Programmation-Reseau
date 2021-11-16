@@ -137,7 +137,7 @@ public class ClientThread extends Thread {
         for(int i = 0; i < listeConversation.size(); i++){
             socOut.println(" - " + i+1 + " - " + listeConversation.get(i).getNomConversation());
         }
-        socOut.println(FIN_AFFICHAGE);
+        //socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
     }
 
@@ -149,7 +149,7 @@ public class ClientThread extends Thread {
         for(int i = 0; i < listeUtilisateur.size(); i++){
             socOut.println(" - " + i+1 + " - " + listeUtilisateur.get(i));
         }
-        socOut.println(FIN_AFFICHAGE);
+        //socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
     }
 
