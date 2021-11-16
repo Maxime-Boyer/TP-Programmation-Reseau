@@ -1,11 +1,37 @@
 package beans;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message {
 
-    private Utilisateur auteur;
+    private String nomAuteur;
     private String corpsMessage;
     private Date dateEnvoi;
+    private SimpleDateFormat formatDate;
 
+    /**
+     * Message textuel envoyé par un utilisateur dans une conversation
+     * @param nomAuteur: le nom de l'auteur du message
+     * @param corpsMessage: le message écrit par l'auteur
+     */
+    public Message(String nomAuteur, String corpsMessage) {
+        this.nomAuteur = nomAuteur;
+        this.corpsMessage = corpsMessage;
+
+        formatDate= new SimpleDateFormat("yyyy-MM-dd 'à' HH'h'mm");
+        this.dateEnvoi = new Date(System.currentTimeMillis());
+    }
+
+    public String getNomAuteur() {
+        return nomAuteur;
+    }
+
+    public String getCorpsMessage() {
+        return corpsMessage;
+    }
+
+    public String getDateEnvoi() {
+        return formatDate.format(dateEnvoi);
+    }
 }

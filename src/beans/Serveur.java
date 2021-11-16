@@ -12,6 +12,7 @@ public class Serveur {
 
     public Serveur(EchoServerMultiThreaded echoServerMultiThreaded) {
         this.echoServerMultiThreaded = new EchoServerMultiThreaded();
+
     }
 
     public ArrayList<String> getListeNomsUtilisateurs() {
