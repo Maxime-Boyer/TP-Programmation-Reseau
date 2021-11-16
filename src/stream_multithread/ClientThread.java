@@ -252,7 +252,7 @@ public class ClientThread extends Thread {
                 if((conversation.getListeParticipants().get(0).equals(utilsateurCherche) && conversation.getListeParticipants().get(1).equals(nomUtilisateur))
                 || (conversation.getListeParticipants().get(1).equals(utilsateurCherche) && conversation.getListeParticipants().get(0).equals(nomUtilisateur))
                 ){
-                    conversation.ajouterMessage(nomUtilisateur, message);
+                    envoyerMessage(conversation, nomUtilisateur, message);
                     System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
                     conversationTrouve = true;
                 }
@@ -260,13 +260,18 @@ public class ClientThread extends Thread {
         }
         if(!conversationTrouve){
             conversation = new Conversation(nomUtilisateur, utilsateurCherche);
-            conversation.ajouterMessage(nomUtilisateur, message);
-            serveur.getListeConversations().add(conversation);
+            envoyerMessage(conversation, nomUtilisateur, message);
             System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
+            serveur.getListeConversations().add(conversation);
         }
+
         conversation.afficherMessages();
         etat = EtatsPossibles.MENU_INITIAL;
         afficherMenu = true;
+    }
+
+    public void envoyerMessage(Conversation conversation, String nomUtilisateur, String message){
+        conversation.ajouterMessage(nomUtilisateur, message);
     }
 
     public String getNomUtilisateur() {
