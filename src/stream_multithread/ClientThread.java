@@ -136,9 +136,25 @@ public class ClientThread extends Thread {
         socOut.println("Ordre alphabétique des conversations");
         Collections.sort(listeConversation, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
         int j = 1;
+        String utilisateur = "";
+        boolean peutAfficherConversation = true;
         for(int i = 0; i < listeConversation.size(); i++){
-            socOut.println(" - " + j + " - " + listeConversation.get(i).getNomConversation());
-            j++;
+            peutAfficherConversation = true;
+            if(listeConversation.get(i).getListeParticipants().size() == 2){
+                if((listeConversation.get(i).getListeParticipants().get(0).equals(nomUtilisateur) || listeConversation.get(i).getListeParticipants().get(1).equals(nomUtilisateur))){
+                    if(listeConversation.get(i).getListeParticipants().get(0).equals(nomUtilisateur)){
+                        utilisateur = listeConversation.get(i).getListeParticipants().get(1);
+                    }
+                    else{
+                        utilisateur = listeConversation.get(i).getListeParticipants().get(0);
+                    }
+                    socOut.println(" - " + j + " - Messagerie avec " + utilisateur);
+                    j++;
+                }
+            }else{
+                socOut.println(" - " + j + " - " + listeConversation.get(i).getNomConversation());
+                j++;
+            }
         }
         //socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
@@ -219,8 +235,15 @@ public class ClientThread extends Thread {
         socOut.println(FIN_AFFICHAGE);
         String line = socIn.readLine();
         System.out.println("Contacter utilisateur: "+line);
+
+
+
         etat = EtatsPossibles.MENU_INITIAL;
         afficherMenu = true;
+    }
+
+    public void envoyerUnMessage(){
+
     }
 
     public String getNomUtilisateur() {

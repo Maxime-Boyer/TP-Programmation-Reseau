@@ -101,4 +101,8 @@ public class Conversation {
             System.out.println(message.getCorpsMessage());
         }
     }
+
+    public ArrayList<String> getListeParticipants() {
+        return listeParticipants;
+    }
 }
