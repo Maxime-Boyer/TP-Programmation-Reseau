@@ -208,7 +208,7 @@ public class ClientThread extends Thread {
         String line = socIn.readLine();
         System.out.println("Contacter utilisateur: "+line);
 
-
+        //TODO faire remonter le message au server
 
         etat = EtatsPossibles.MENU_INITIAL;
         afficherMenu = true;
