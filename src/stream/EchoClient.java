@@ -52,10 +52,19 @@ public class EchoClient {
         String line;
         System.out.println("Entrez votre identifiant puis taper entrer");
         while (true) {
-            line=stdIn.readLine();
+            //System.out.println("Début affichage");
+            line=stdIn.readLine(); //point d'attente
             if (line.equals(".")) break;
             socOut.println(line);
-            System.out.println("echo: " + socIn.readLine());
+
+            //on affiche tout ce qui est renvoye par le thread
+            String affichage = socIn.readLine();
+            while(affichage.length() > 0){
+                //System.out.println("taille: "+affichage.length());
+                System.out.println(affichage);
+                affichage = socIn.readLine();
+            }
+            //System.out.println("Fin affichage");
         }
         socOut.close();
         socIn.close();

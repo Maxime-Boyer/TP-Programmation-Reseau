@@ -24,7 +24,7 @@ public class Serveur {
     }
 
     public void connecterUtilisateur(String nomUtilisateur){
-        System.out.println("Nom Utilisateur Serveur" + nomUtilisateur);
+        System.out.println("\nConnexion de l'utilisateur: " + nomUtilisateur);
         if (!listeNomsUtilisateurs.contains(nomUtilisateur)) {
             listeNomsUtilisateurs.add(nomUtilisateur);
         }
