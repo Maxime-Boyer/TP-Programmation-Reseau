@@ -5,6 +5,7 @@ package stream_multithread; /***
  * Authors:
  */
 
+import beans.Conversation;
 import beans.Serveur;
 import beans.Utilisateur;
 
@@ -77,13 +78,17 @@ public class ClientThread extends Thread {
                             System.out.println("etat : " + etat);
                             break;
                         case MENU_LISTER_CONVERSATIONS:
-                            afficherMenuListerConversations();
+                            afficherMenuListerConversations(socOut);
+                            System.out.println("back in switch");
+                            etat = EtatsPossibles.MENU_INITIAL;
                             break;
                         case MENU_LISTER_UTILISATEURS:
                             afficherMenuListerUtilisateurs(socOut);
+                            etat = EtatsPossibles.MENU_INITIAL;
                             break;
                         case MENU_CONVERSATION:
                             afficherMenuConversation();
+                            etat = EtatsPossibles.MENU_INITIAL;
                             break;
                     }
                 }
@@ -116,20 +121,25 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
-    public void afficherMenuListerConversations(){
-
-        System.out.println("test1");
+    public void afficherMenuListerConversations(PrintStream socOut){
+        ArrayList<Conversation> listeConversation = serveur.getListeConversations();
+        socOut.println(" ");
+        socOut.println("Ordre alphabétique des conversations");
+        Collections.sort(listeConversation, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
+        for(int i = 0; i < listeConversation.size(); i++){
+            socOut.println(" - " + i+1 + " - " + listeConversation.get(i).getNomConversation());
+        }
+        socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
     }
 
     public void afficherMenuListerUtilisateurs(PrintStream socOut){
         ArrayList<String> listeUtilisateur = serveur.getListeNomsUtilisateurs();
-        ArrayList<String> listeUtilisateur2 = listeUtilisateur;
         socOut.println(" ");
         socOut.println("Ordre alphabétique des utilisateurs");
         Collections.sort(listeUtilisateur, Comparator.comparing(String::toLowerCase));
         for(int i = 0; i < listeUtilisateur.size(); i++){
-            socOut.println(" - " + i + " - " + listeUtilisateur.get(i));
+            socOut.println(" - " + i+1 + " - " + listeUtilisateur.get(i));
         }
         socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;

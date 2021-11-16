@@ -69,8 +69,6 @@ public class EchoClient {
                 affichage = socIn.readLine();
             }
 
-
-
         }
         socOut.close();
         socIn.close();
