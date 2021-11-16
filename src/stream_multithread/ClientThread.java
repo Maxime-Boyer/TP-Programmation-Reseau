@@ -5,6 +5,8 @@ package stream_multithread; /***
  * Authors:
  */
 
+import beans.Serveur;
+
 import java.io.*;
 import java.net.*;
 import java.sql.SQLOutput;
@@ -12,11 +14,12 @@ import java.sql.SQLOutput;
 public class ClientThread extends Thread {
 
     private Socket clientSocket;
-    private int idClient;
+    private Serveur serveur;
+    private String nomUtilisateur;
 
-    ClientThread(Socket s, int idClient) {
+    ClientThread(Socket s, Serveur serveur) {
         this.clientSocket = s;
-        this.idClient = idClient;
+        this.serveur = serveur;
     }
 
     /**
@@ -30,18 +33,25 @@ public class ClientThread extends Thread {
                     new InputStreamReader(clientSocket.getInputStream()));
             PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
             String line = socIn.readLine();
+            nomUtilisateur = line;
+            System.out.println("nomUtilisateur " + nomUtilisateur);
+            serveur.connecterUtilisateur(nomUtilisateur);
+            System.out.println(serveur);
             while (line != null) {
-                System.out.println("\nMessage du client "+idClient+":");
+                System.out.println("\nMessage du client "+nomUtilisateur+":");
                 System.out.println(line);
                 socOut.println(line);
                 line = socIn.readLine();
             }
-            System.out.println("\n---     Deconnexion du client "+idClient+"     ---");
+            System.out.println("\n---     Deconnexion du client "+nomUtilisateur+"     ---");
         } catch (Exception e) {
             System.err.println("Error in EchoServer:" + e);
         }
     }
 
+    public String getNomUtilisateur() {
+        return nomUtilisateur;
+    }
 }
 
   

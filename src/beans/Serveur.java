@@ -1,17 +1,18 @@
 package beans;
 
+import stream_multithread.ClientThread;
 import stream_multithread.EchoServerMultiThreaded;
 
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class Serveur {
 
-    private ArrayList<String> listeNomsUtilisateurs;
-    private ArrayList<Conversation> listeConversations;
-    private EchoServerMultiThreaded echoServerMultiThreaded;
+    private ArrayList<String> listeNomsUtilisateurs = new ArrayList<>();
+    private ArrayList<Conversation> listeConversations = new ArrayList<>();
 
-    public Serveur(EchoServerMultiThreaded echoServerMultiThreaded) {
-        this.echoServerMultiThreaded = new EchoServerMultiThreaded();
+    public Serveur() {
     }
 
     public ArrayList<String> getListeNomsUtilisateurs() {
@@ -22,7 +23,17 @@ public class Serveur {
         return listeConversations;
     }
 
-    public EchoServerMultiThreaded getEchoServerMultiThreaded() {
-        return echoServerMultiThreaded;
+    public void connecterUtilisateur(String nomUtilisateur){
+        System.out.println("Nom Utilisateur Serveur" + nomUtilisateur);
+        if (!listeNomsUtilisateurs.contains(nomUtilisateur)) {
+            listeNomsUtilisateurs.add(nomUtilisateur);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Serveur{" +
+                "listeNomsUtilisateurs=" + listeNomsUtilisateurs +
+                '}';
     }
 }
