@@ -19,6 +19,8 @@ public class ClientThread extends Thread {
     private EtatsPossibles etat;
     private boolean afficherMenu;
 
+    public static String FIN_AFFICHAGE = "fin affichage";
+
     private enum EtatsPossibles {
         MENU_INITIAL,
         MENU_LISTER_CONVERSATIONS,
@@ -67,6 +69,9 @@ public class ClientThread extends Thread {
                     switch (etat){
                         case MENU_INITIAL:
                             afficherMenuInitial(socOut);
+                            line = socIn.readLine();
+                            etat = gereMenuInitial(line);
+                            System.out.println("etat : " + etat);
                             break;
                         case MENU_LISTER_CONVERSATIONS:
                             afficherMenuListerConversations();
@@ -81,7 +86,7 @@ public class ClientThread extends Thread {
                 }
 
                 // attente d'une entree
-                System.out.println(line);
+
 
                 // traitement de l'entree
                 /*if(line == "1") {
@@ -104,24 +109,50 @@ public class ClientThread extends Thread {
         socOut.println("4 - deconnexion");
         socOut.println(" ");
         socOut.println("Entrez le numéro correspondant à l'action que vous souhaiter réaliser");
-
+        socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
     }
 
     public void afficherMenuListerConversations(){
         System.out.println("test1");
+        afficherMenu = false;
     }
 
     public void afficherMenuListerUtilisateurs(){
         System.out.println("test2");
+        afficherMenu = false;
     }
 
     public void afficherMenuConversation(){
         System.out.println("test3");
+        afficherMenu = false;
     }
 
     public String getNomUtilisateur() {
         return nomUtilisateur;
+    }
+
+    public EtatsPossibles gereMenuInitial(String line){
+        EtatsPossibles etat = EtatsPossibles.MENU_INITIAL;
+        if(!(line.length() > 1 || line.charAt(0) <= '0' || line.charAt(0) > '4')) {
+            int choix = Integer.parseInt(line);
+            switch (choix) {
+                case 1:
+                    etat = EtatsPossibles.MENU_LISTER_CONVERSATIONS;
+                    break;
+                case 2:
+                    etat = EtatsPossibles.MENU_LISTER_UTILISATEURS;
+                    break;
+                case 3:
+                    etat = EtatsPossibles.MENU_CONVERSATION;
+                    break;
+                case 4:
+                    //TODO : à faire
+                    break;
+            }
+        }
+        afficherMenu = true;
+        return etat;
     }
 }
 

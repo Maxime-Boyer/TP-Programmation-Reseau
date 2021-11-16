@@ -6,6 +6,9 @@
  */
 package stream;
 
+import stream_multithread.ClientThread;
+import toDelete.Client;
+
 import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.net.*;
@@ -58,13 +61,16 @@ public class EchoClient {
             socOut.println(line);
 
             //on affiche tout ce qui est renvoye par le thread
-            String affichage = socIn.readLine();
-            while(affichage.length() > 0){
+            String affichage = socIn.readLine();;
+
+            while(!affichage.equals(ClientThread.FIN_AFFICHAGE)){
                 //System.out.println("taille: "+affichage.length());
                 System.out.println(affichage);
                 affichage = socIn.readLine();
             }
-            //System.out.println("Fin affichage");
+
+
+
         }
         socOut.close();
         socIn.close();
