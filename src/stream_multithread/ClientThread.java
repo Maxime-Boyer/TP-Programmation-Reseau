@@ -244,9 +244,10 @@ public class ClientThread extends Thread {
         //socOut.println(FIN_AFFICHAGE);
 
         boolean conversationTrouve = false;
+        Conversation conversation = null;
         //TODO faire remonter le message au server
         for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            Conversation conversation = serveur.getListeConversations().get(i);
+            conversation = serveur.getListeConversations().get(i);
             if(conversation.getListeParticipants().size() == 2){
                 if((conversation.getListeParticipants().get(0).equals(utilsateurCherche) && conversation.getListeParticipants().get(1).equals(nomUtilisateur))
                 || (conversation.getListeParticipants().get(1).equals(utilsateurCherche) && conversation.getListeParticipants().get(0).equals(nomUtilisateur))
@@ -258,8 +259,12 @@ public class ClientThread extends Thread {
             }
         }
         if(!conversationTrouve){
-            //Conversation conversation = new Conversation();
+            conversation = new Conversation(nomUtilisateur, utilsateurCherche);
+            conversation.ajouterMessage(nomUtilisateur, message);
+            serveur.getListeConversations().add(conversation);
+            System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
         }
+        conversation.afficherMessages();
         etat = EtatsPossibles.MENU_INITIAL;
         afficherMenu = true;
     }
