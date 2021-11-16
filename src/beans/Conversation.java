@@ -8,4 +8,6 @@ public class Conversation {
     private ArrayList<Message> listeMessages;
     private ArrayList<Utilisateur> listeParticipants;
 
+
+
 }
