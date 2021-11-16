@@ -234,16 +234,34 @@ public class ClientThread extends Thread {
         socOut.println("Entrez le nom de l'utilisateur à qui vous souhaitez parler");
         socOut.println(FIN_AFFICHAGE);
         String line = socIn.readLine();
-        System.out.println("Contacter utilisateur: "+line);
+        String utilsateurCherche = line;
+        System.out.println("Contacter utilisateur: "+utilsateurCherche);
+        socOut.println("Entrez votre message à envoyer à " + utilsateurCherche);
+        socOut.println(FIN_AFFICHAGE);
+        line = socIn.readLine();
+        String message = line;
+        System.out.println("Message envoyé");
+        //socOut.println(FIN_AFFICHAGE);
 
+        boolean conversationTrouve = false;
         //TODO faire remonter le message au server
-
+        for(int i = 0; i < serveur.getListeConversations().size(); i++){
+            Conversation conversation = serveur.getListeConversations().get(i);
+            if(conversation.getListeParticipants().size() == 2){
+                if((conversation.getListeParticipants().get(0).equals(utilsateurCherche) && conversation.getListeParticipants().get(1).equals(nomUtilisateur))
+                || (conversation.getListeParticipants().get(1).equals(utilsateurCherche) && conversation.getListeParticipants().get(0).equals(nomUtilisateur))
+                ){
+                    conversation.ajouterMessage(nomUtilisateur, message);
+                    System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
+                    conversationTrouve = true;
+                }
+            }
+        }
+        if(!conversationTrouve){
+            //Conversation conversation = new Conversation();
+        }
         etat = EtatsPossibles.MENU_INITIAL;
         afficherMenu = true;
-    }
-
-    public void envoyerUnMessage(){
-
     }
 
     public String getNomUtilisateur() {

@@ -61,11 +61,12 @@ public class EchoClient {
             socOut.println(line);
 
             //on affiche tout ce qui est renvoye par le thread
-            String affichage = socIn.readLine();;
+            String affichage = "";
 
             while(!affichage.equals(ClientThread.FIN_AFFICHAGE)){
-                System.out.println(affichage);
                 affichage = socIn.readLine();
+                if(!affichage.equals(ClientThread.FIN_AFFICHAGE))
+                    System.out.println(affichage);
             }
 
         }
