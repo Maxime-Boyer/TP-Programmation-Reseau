@@ -50,6 +50,7 @@ public class EchoClient {
         }
 
         String line;
+        System.out.println("Entrez votre identifiant puis taper entrer");
         while (true) {
             line=stdIn.readLine();
             if (line.equals(".")) break;

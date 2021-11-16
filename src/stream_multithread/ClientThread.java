@@ -28,6 +28,7 @@ public class ClientThread extends Thread {
      **/
     public void run() {
         try {
+
             BufferedReader socIn = null;
             socIn = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
@@ -37,11 +38,17 @@ public class ClientThread extends Thread {
             System.out.println("nomUtilisateur " + nomUtilisateur);
             serveur.connecterUtilisateur(nomUtilisateur);
             System.out.println(serveur);
+            boolean nouveauClient = true;
             while (line != null) {
-                System.out.println("\nMessage du client "+nomUtilisateur+":");
-                System.out.println(line);
-                socOut.println(line);
-                line = socIn.readLine();
+                if(!nouveauClient) {
+                    line = socIn.readLine();
+                    System.out.println("\nMessage du client " + nomUtilisateur + " :");
+                    System.out.println(line);
+                    socOut.println(line);
+                }else{
+                    socOut.println("Vous êtes connecté avec succès");
+                    nouveauClient = false;
+                }
             }
             System.out.println("\n---     Deconnexion du client "+nomUtilisateur+"     ---");
         } catch (Exception e) {
