@@ -17,40 +17,41 @@ public class ClientThread extends Thread {
     private Serveur serveur;
     private String nomUtilisateur;
 
+    /**
+     * TODO javadoc Clienthread
+     * @param s
+     * @param serveur
+     */
     ClientThread(Socket s, Serveur serveur) {
         this.clientSocket = s;
         this.serveur = serveur;
     }
 
     /**
+     * TODO traduction
      * receives a request from client then sends an echo to the client
      * @param clientSocket the client socket
      **/
     public void run() {
+
         try {
 
+            // initialisation des canaux de communication
             BufferedReader socIn = null;
             socIn = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
             PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
             String line = socIn.readLine();
+
+            // connection de l'utilisateur
             nomUtilisateur = line;
-            System.out.println("nomUtilisateur " + nomUtilisateur);
             serveur.connecterUtilisateur(nomUtilisateur);
-            System.out.println(serveur);
-            boolean nouveauClient = true;
+            System.out.println("\n"+serveur);
+
             while (line != null) {
-                if(!nouveauClient) {
-                    line = socIn.readLine();
-                    System.out.println("\nMessage du client " + nomUtilisateur + " :");
-                    System.out.println(line);
-                    socOut.println(line);
-                }else{
-                    socOut.println("Vous êtes connecté avec succès");
-                    nouveauClient = false;
-                }
+                socOut.println("Vous êtes connecté avec succès");
             }
-            System.out.println("\n---     Deconnexion du client "+nomUtilisateur+"     ---");
+            socOut.println("Deconnexion réussie.");
         } catch (Exception e) {
             System.err.println("Error in EchoServer:" + e);
         }
