@@ -10,8 +10,19 @@ public class Serveur {
     private ArrayList<Conversation> listeConversations;
     private EchoServerMultiThreaded echoServerMultiThreaded;
 
-    public Serveur(ArrayList<String> listeNomsUtilisateurs, ArrayList<Conversation> listeConversations) {
-        this.listeNomsUtilisateurs = listeNomsUtilisateurs;
-        this.listeConversations = listeConversations;
+    public Serveur(EchoServerMultiThreaded echoServerMultiThreaded) {
+        this.echoServerMultiThreaded = new EchoServerMultiThreaded();
+    }
+
+    public ArrayList<String> getListeNomsUtilisateurs() {
+        return listeNomsUtilisateurs;
+    }
+
+    public ArrayList<Conversation> getListeConversations() {
+        return listeConversations;
+    }
+
+    public EchoServerMultiThreaded getEchoServerMultiThreaded() {
+        return echoServerMultiThreaded;
     }
 }
