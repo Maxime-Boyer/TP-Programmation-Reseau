@@ -6,10 +6,12 @@ package stream_multithread; /***
  */
 
 import beans.Serveur;
+import beans.Utilisateur;
 
 import java.io.*;
 import java.net.*;
-import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class ClientThread extends Thread {
 
@@ -114,12 +116,27 @@ public class ClientThread extends Thread {
     }
 
     public void afficherMenuListerConversations(){
+
         System.out.println("test1");
         afficherMenu = false;
     }
 
-    public void afficherMenuListerUtilisateurs(){
-        System.out.println("test2");
+    public void afficherMenuListerUtilisateurs(PrintStream socOut){
+        ArrayList<String> listeUtilisateur = serveur.getListeNomsUtilisateurs();
+        ArrayList<String> listeUtilisateur2 = listeUtilisateur;
+        socOut.println(" ");
+        socOut.println("Ordre alphabétique des utilisateurs");
+        listeUtilisateur.sort(Comparator.comparing(s2.compareTo(s1)));
+        for(int i = 0; i < listeUtilisateur.size(); i++){
+
+        }
+        socOut.println("1 - lister les conversations");
+        socOut.println("2 - lister les contacts");
+        socOut.println("3 - entrer dans une conversation");
+        socOut.println("4 - deconnexion");
+        socOut.println(" ");
+        socOut.println("Entrez le numéro correspondant à l'action que vous souhaiter réaliser");
+        socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
     }
 
