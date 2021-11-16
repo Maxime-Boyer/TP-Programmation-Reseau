@@ -134,8 +134,10 @@ public class ClientThread extends Thread {
         socOut.println(" ");
         socOut.println("Ordre alphabétique des conversations");
         Collections.sort(listeConversation, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
+        int j = 1;
         for(int i = 0; i < listeConversation.size(); i++){
-            socOut.println(" - " + i+1 + " - " + listeConversation.get(i).getNomConversation());
+            socOut.println(" - " + j + " - " + listeConversation.get(i).getNomConversation());
+            j++;
         }
         //socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
@@ -146,8 +148,10 @@ public class ClientThread extends Thread {
         socOut.println(" ");
         socOut.println("Ordre alphabétique des utilisateurs");
         Collections.sort(listeUtilisateur, Comparator.comparing(String::toLowerCase));
+        int j = 1;
         for(int i = 0; i < listeUtilisateur.size(); i++){
-            socOut.println(" - " + i+1 + " - " + listeUtilisateur.get(i));
+            socOut.println(" - " + j + " - " + listeUtilisateur.get(i));
+            j++;
         }
         //socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
