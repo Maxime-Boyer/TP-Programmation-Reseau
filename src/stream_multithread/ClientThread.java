@@ -27,7 +27,10 @@ public class ClientThread extends Thread {
         MENU_INITIAL,
         MENU_LISTER_CONVERSATIONS,
         MENU_LISTER_UTILISATEURS,
-        MENU_CONVERSATION
+        MENU_CONVERSATION,
+        CREER_CONVERSATION_GROUPE,
+        REJOINDRE_CONVERSATION_GROUPE,
+        PARLER_A_UTILISATEUR
     };
 
     /**
@@ -73,28 +76,29 @@ public class ClientThread extends Thread {
                             afficherMenuInitial(socOut);
                             line = socIn.readLine();
                             etat = gereMenuInitial(line);
-                            System.out.println("etat : " + etat);
                             break;
                         case MENU_LISTER_CONVERSATIONS:
                             afficherMenuListerConversations();
                             break;
                         case MENU_LISTER_UTILISATEURS:
-                            afficherMenuListerUtilisateurs();
+                            afficherMenuListerUtilisateurs(socOut);
                             break;
                         case MENU_CONVERSATION:
-                            afficherMenuConversation();
+                            afficherMenuConversation(socOut);
+                            line = socIn.readLine();
+                            etat = gereMenuConversation(line);
+                            break;
+                        case CREER_CONVERSATION_GROUPE:
+                            creerConversation(socOut, socIn);
+                            break;
+                        case REJOINDRE_CONVERSATION_GROUPE:
+                            rejoindreConversation(socOut, socIn);
+                            break;
+                        case PARLER_A_UTILISATEUR:
+                            parlerAUtilisateur(socOut, socIn);
                             break;
                     }
                 }
-
-                // attente d'une entree
-
-
-                // traitement de l'entree
-                /*if(line == "1") {
-                    etat = EtatsPossibles.MENU_LISTER_CONVERSATIONS;
-                }*/
-
             }
             socOut.println("Deconnexion réussie.");
         } catch (Exception e) {
@@ -126,7 +130,7 @@ public class ClientThread extends Thread {
         ArrayList<String> listeUtilisateur2 = listeUtilisateur;
         socOut.println(" ");
         socOut.println("Ordre alphabétique des utilisateurs");
-        listeUtilisateur.sort(Comparator.comparing(s2.compareTo(s1)));
+        //listeUtilisateur.sort(Comparator.comparing(s2.compareTo(s1)));
         for(int i = 0; i < listeUtilisateur.size(); i++){
 
         }
@@ -140,9 +144,42 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
-    public void afficherMenuConversation(){
-        System.out.println("test3");
+    public void afficherMenuConversation(PrintStream socOut){
+        socOut.println(" ");
+        socOut.println("Que souhaitez-vous faire ?");
+        socOut.println("1 - Créer une conversation de groupe");
+        socOut.println("2 - Rejoindre une conversation de groupe");
+        socOut.println("3 - Parler à un utilisateur");
+        socOut.println("4 - Retourner au menu initial");
+        socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
+    }
+
+    public void creerConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
+        socOut.println("Entrez le nom de la conversation que vous souhaitez créer:");
+        socOut.println(FIN_AFFICHAGE);
+        String line = socIn.readLine();
+        System.out.println("Nouvelle conversation: "+line);
+        etat = EtatsPossibles.MENU_INITIAL;
+        afficherMenu = true;
+    }
+
+    public void rejoindreConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
+        socOut.println("Entrez le nom de la conversation que vous souhaitez rejoindre:");
+        socOut.println(FIN_AFFICHAGE);
+        String line = socIn.readLine();
+        System.out.println("Rejoindre conversation: "+line);
+        etat = EtatsPossibles.MENU_INITIAL;
+        afficherMenu = true;
+    }
+
+    public void parlerAUtilisateur(PrintStream socOut, BufferedReader socIn) throws IOException {
+        socOut.println("Entrez le nom de l'utilisateur à qui vous souhaitez parler");
+        socOut.println(FIN_AFFICHAGE);
+        String line = socIn.readLine();
+        System.out.println("Contacter utilisateur: "+line);
+        etat = EtatsPossibles.MENU_INITIAL;
+        afficherMenu = true;
     }
 
     public String getNomUtilisateur() {
@@ -165,6 +202,29 @@ public class ClientThread extends Thread {
                     break;
                 case 4:
                     //TODO : à faire
+                    break;
+            }
+        }
+        afficherMenu = true;
+        return etat;
+    }
+
+    public EtatsPossibles gereMenuConversation(String line){
+        EtatsPossibles etat = EtatsPossibles.MENU_INITIAL;
+        if(!(line.length() > 1 || line.charAt(0) <= '0' || line.charAt(0) > '4')) {
+            int choix = Integer.parseInt(line);
+            switch (choix) {
+                case 1:
+                    etat = EtatsPossibles.CREER_CONVERSATION_GROUPE;
+                    break;
+                case 2:
+                    etat = EtatsPossibles.REJOINDRE_CONVERSATION_GROUPE;
+                    break;
+                case 3:
+                    etat = EtatsPossibles.PARLER_A_UTILISATEUR;
+                    break;
+                case 4:
+                    etat = EtatsPossibles.MENU_INITIAL;
                     break;
             }
         }

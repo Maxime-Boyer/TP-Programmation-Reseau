@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TP-Programmation-Reseau.iml" filepath="$PROJECT_DIR$/.idea/TP-Programmation-Reseau.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TP-Programmation-Reseau1.iml" filepath="$PROJECT_DIR$/TP-Programmation-Reseau1.iml" />
     </modules>
   </component>
 </project>
