@@ -50,6 +50,9 @@ public class Conversation {
         listeMessages.add(message);
     }
 
+    /**
+     * Liste l'ensemble des messages de la conversation et les affiche
+     */
     public void afficherMessages(){
         System.out.println("\n---     Conversation "+nomConversation+"     ---");
         Message message;
