@@ -64,7 +64,6 @@ public class EchoClient {
             String affichage = socIn.readLine();;
 
             while(!affichage.equals(ClientThread.FIN_AFFICHAGE)){
-                //System.out.println("taille: "+affichage.length());
                 System.out.println(affichage);
                 affichage = socIn.readLine();
             }
