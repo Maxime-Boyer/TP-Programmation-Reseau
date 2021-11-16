@@ -135,18 +135,19 @@ public class ClientThread extends Thread {
         socOut.println("Ordre alphabétique des conversations");
         Collections.sort(listeConversation, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
         int j = 1;
+        String utilisateur = "";
         boolean peutAfficherConversation = true;
         for(int i = 0; i < listeConversation.size(); i++){
             peutAfficherConversation = true;
             if(listeConversation.get(i).getListeParticipants().size() == 2){
                 if((listeConversation.get(i).getListeParticipants().get(0).equals(nomUtilisateur) || listeConversation.get(i).getListeParticipants().get(1).equals(nomUtilisateur))){
-                    String utilisateur;
                     if(listeConversation.get(i).getListeParticipants().get(0).equals(nomUtilisateur)){
-                        socOut.println(" - " + j + " - Messagerie avec " + listeConversation.get(i).getListeParticipants().get(1));
+                        utilisateur = listeConversation.get(i).getListeParticipants().get(1);
                     }
                     else{
-                        socOut.println(" - " + j + " - Messagerie avec " + listeConversation.get(i).getListeParticipants().get(0));
+                        utilisateur = listeConversation.get(i).getListeParticipants().get(0);
                     }
+                    socOut.println(" - " + j + " - Messagerie avec " + utilisateur);
                     j++;
                 }
             }else{
