@@ -49,13 +49,9 @@ public class EchoClient {
             System.exit(1);
         }
 
-        System.out.println("avant while");
-
         String line;
         while (true) {
-            System.out.println("dans while");
             line=stdIn.readLine();
-            System.out.println("line : " + line);
             if (line.equals(".")) break;
             socOut.println(line);
             System.out.println("echo: " + socIn.readLine());

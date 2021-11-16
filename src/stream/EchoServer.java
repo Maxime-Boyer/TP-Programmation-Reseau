@@ -26,7 +26,6 @@ public class EchoServer  {
             while (line != null) {
                 System.out.println("\nMessage de "+clientSocket.getInetAddress()+":");
                 System.out.println(line);
-                System.out.println("line : " + line);
                 socOut.println(line);
                 line = socIn.readLine();
             }

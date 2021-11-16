@@ -12,9 +12,11 @@ import java.sql.SQLOutput;
 public class ClientThread extends Thread {
 
     private Socket clientSocket;
+    private int idClient;
 
-    ClientThread(Socket s) {
+    ClientThread(Socket s, int idClient) {
         this.clientSocket = s;
+        this.idClient = idClient;
     }
 
     /**
@@ -27,11 +29,14 @@ public class ClientThread extends Thread {
             socIn = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
             PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
-            while (true) {
-                String line = socIn.readLine();
-                System.out.println("line : " + line);
+            String line = socIn.readLine();
+            while (line != null) {
+                System.out.println("\nMessage du client "+idClient+":");
+                System.out.println(line);
                 socOut.println(line);
+                line = socIn.readLine();
             }
+            System.out.println("\n---     Deconnexion du client "+idClient+"     ---");
         } catch (Exception e) {
             System.err.println("Error in EchoServer:" + e);
         }
