@@ -38,6 +38,8 @@ public class EchoClient {
                     new InputStreamReader(echoSocket.getInputStream()));
             socOut= new PrintStream(echoSocket.getOutputStream());
             stdIn = new BufferedReader(new InputStreamReader(System.in));
+            //entree client
+
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + args[0]);
             System.exit(1);

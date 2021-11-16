@@ -22,11 +22,15 @@ public class EchoServer  {
             socIn = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
             PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
-            while (true) {
-                String line = socIn.readLine();
+            String line = socIn.readLine();
+            while (line != null) {
+                System.out.println("\nMessage de "+clientSocket.getInetAddress()+":");
+                System.out.println(line);
                 System.out.println("line : " + line);
                 socOut.println(line);
+                line = socIn.readLine();
             }
+            System.out.println("\nDeconnexion de "+clientSocket.getInetAddress());
         } catch (Exception e) {
             System.err.println("Error in EchoServer:" + e);
         }
@@ -48,7 +52,7 @@ public class EchoServer  {
             listenSocket = new ServerSocket(Integer.parseInt(args[0])); //port
             while (true) {
                 Socket clientSocket = listenSocket.accept();
-                System.out.println("connexion from:" + clientSocket.getInetAddress());
+                System.out.println("\nConnexion from:" + clientSocket.getInetAddress());
                 doService(clientSocket);
             }
         } catch (Exception e) {
