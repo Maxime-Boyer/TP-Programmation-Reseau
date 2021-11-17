@@ -46,9 +46,7 @@ public class ClientThread extends Thread {
     }
 
     /**
-     * TODO Quentin traduction
-     * receives a request from client then sends an echo to the client
-     * @param clientSocket the client socket
+     * Lance un nouveau thread qui gèrera le cycle de vie d'une seul client au sein de l'application
      **/
     public void run() {
 
@@ -117,7 +115,11 @@ public class ClientThread extends Thread {
         afficherMenu = true;
     }
 
-    // TODO Quentin: javadoc
+    /**
+     * affiche le menu initial, c'est à dire le menu que voit l'utilisateur lorsqu'il est connecté mais qu'il
+     * n'a commencé aucune action
+     * @param socOut: le canal de communication sortant qui permet de parler au client
+     */
     public void afficherMenuInitial(PrintStream socOut){
         socOut.println(" ");
         socOut.println("Menu initial:");
@@ -177,7 +179,10 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
-    // TODO Quentin: javadoc
+    /**
+     * Affiche le menu permettant de communiquer sur le forum
+     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
+     */
     public void afficherMenuConversation(PrintStream socOut){
         socOut.println(" ");
         socOut.println("Que souhaitez-vous faire ?");
@@ -189,7 +194,15 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
-    // TODO Quentin: javadoc
+    /**
+     * Methode permettant de creer une communication
+     * Protections:
+     *      si la communication existe deja, message avertissement et envoie utilisateur vers le menu précédent
+     *      si le nom entré ne possede pas un seul caractere ou chiffre, on lui redemande de saisir le nom
+     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
+     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
+     * @throws IOException: jette les exceptions liees aux I/O utilisateur
+     */
     public void creerConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
 
         String line = "";
@@ -286,7 +299,10 @@ public class ClientThread extends Thread {
         return nomUtilisateur;
     }
 
-    // TODO Quentin: javadoc
+    /**
+     * Récupère la saisie utilisateur suite au menu initial et redirige vers l'état demandé par l'utilisateur
+     * @param line: l'entree utilisateur
+     */
     public void gereMenuInitial(String line){
         if(!(line.length() > 1 || line.charAt(0) <= '0' || line.charAt(0) > '4')) {
             int choix = Integer.parseInt(line);
@@ -308,7 +324,10 @@ public class ClientThread extends Thread {
         afficherMenu = true;
     }
 
-    // TODO Quentin: javadoc
+    /**
+     * Récupère la saisie utilisateur suite au menu conversation et redirige vers l'état demandé par l'utilisateur
+     * @param line: l'entree utilisateur
+     */
     public void gereMenuConversation(String line){
         if(!(line.length() > 1 || line.charAt(0) <= '0' || line.charAt(0) > '4')) {
             int choix = Integer.parseInt(line);
