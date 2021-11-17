@@ -75,8 +75,7 @@ public class ClientThread extends Thread {
                     switch (etat){
                         case MENU_INITIAL:
                             afficherMenuInitial(socOut);
-                            line = socIn.readLine();        // TODO Quentin: mettre dans la methode gereMenuInitial
-                            gereMenuInitial(line);
+                            gereMenuInitial(socIn);
                             break;
                         case MENU_LISTER_CONVERSATIONS:
                             afficherMenuListerConversations(socOut);
@@ -88,8 +87,7 @@ public class ClientThread extends Thread {
                             break;
                         case MENU_CONVERSATION:
                             afficherMenuConversation(socOut);
-                            line = socIn.readLine();        // TODO Quentin: mettre dans la methode gereMenuConversation
-                            gereMenuConversation(line);
+                            gereMenuConversation(socIn);
                             break;
                         case CREER_CONVERSATION_GROUPE:
                             creerConversation(socOut, socIn);
@@ -301,9 +299,14 @@ public class ClientThread extends Thread {
 
     /**
      * Récupère la saisie utilisateur suite au menu initial et redirige vers l'état demandé par l'utilisateur
-     * @param line: l'entree utilisateur
+     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
+     * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void gereMenuInitial(String line){
+    public void gereMenuInitial(BufferedReader socIn) throws IOException {
+
+        // si entree non prise en charge, affiche à nouveau le meme menu
+        String line = socIn.readLine();
+
         if(!(line.length() > 1 || line.charAt(0) <= '0' || line.charAt(0) > '4')) {
             int choix = Integer.parseInt(line);
             switch (choix) {
@@ -317,7 +320,7 @@ public class ClientThread extends Thread {
                     etat = EtatsPossibles.MENU_CONVERSATION;
                     break;
                 case 4:
-                    //TODO : à faire
+                    //TODO : gérer la déconnexion
                     break;
             }
         }
@@ -326,9 +329,14 @@ public class ClientThread extends Thread {
 
     /**
      * Récupère la saisie utilisateur suite au menu conversation et redirige vers l'état demandé par l'utilisateur
-     * @param line: l'entree utilisateur
+     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
+     * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void gereMenuConversation(String line){
+    public void gereMenuConversation(BufferedReader socIn) throws IOException{
+
+        // si entree non prise en charge, affiche à nouveau le meme menu
+        String line = socIn.readLine();
+
         if(!(line.length() > 1 || line.charAt(0) <= '0' || line.charAt(0) > '4')) {
             int choix = Integer.parseInt(line);
             switch (choix) {
