@@ -19,6 +19,10 @@ public class EchoServerMultiThreaded  {
      * @param args port
      *
      **/
+    /**
+     * TODO Maxime: javadoc (traduction ci-dessus)
+     * @param clientSocket
+     */
     public static void main(String args[]){
 
         ServerSocket listenSocket;

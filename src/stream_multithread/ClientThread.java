@@ -36,7 +36,7 @@ public class ClientThread extends Thread {
     };
 
     /**
-     * TODO javadoc Clienthread
+     * TODO Maxime javadoc Clienthread
      * @param s
      * @param serveur
      */
@@ -46,7 +46,7 @@ public class ClientThread extends Thread {
     }
 
     /**
-     * TODO traduction
+     * TODO Quentin traduction
      * receives a request from client then sends an echo to the client
      * @param clientSocket the client socket
      **/
@@ -77,12 +77,11 @@ public class ClientThread extends Thread {
                     switch (etat){
                         case MENU_INITIAL:
                             afficherMenuInitial(socOut);
-                            line = socIn.readLine();
-                            etat = gereMenuInitial(line);
+                            line = socIn.readLine();        // TODO Quentin: mettre dans la methode gereMenuInitial
+                            gereMenuInitial(line);
                             break;
                         case MENU_LISTER_CONVERSATIONS:
                             afficherMenuListerConversations(socOut);
-                            System.out.println("back in switch");
                             retourEtatInitial();
                             break;
                         case MENU_LISTER_UTILISATEURS:
@@ -91,8 +90,8 @@ public class ClientThread extends Thread {
                             break;
                         case MENU_CONVERSATION:
                             afficherMenuConversation(socOut);
-                            line = socIn.readLine();
-                            etat = gereMenuConversation(line);
+                            line = socIn.readLine();        // TODO Quentin: mettre dans la methode gereMenuConversation
+                            gereMenuConversation(line);
                             break;
                         case CREER_CONVERSATION_GROUPE:
                             creerConversation(socOut, socIn);
@@ -112,11 +111,13 @@ public class ClientThread extends Thread {
         }
     }
 
+    // TODO Maxime: javadoc + necessaire de faire une méthode pour ca?
     public void retourEtatInitial(){
         etat = EtatsPossibles.MENU_INITIAL;
         afficherMenu = true;
     }
 
+    // TODO Quentin: javadoc
     public void afficherMenuInitial(PrintStream socOut){
         socOut.println(" ");
         socOut.println("Menu initial:");
@@ -130,6 +131,7 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
+    // TODO Maxime: javadoc
     public void afficherMenuListerConversations(PrintStream socOut){
         ArrayList<Conversation> listeConversation = serveur.getListeConversations();
         socOut.println(" ");
@@ -160,6 +162,7 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
+    // TODO Maxime: javadoc
     public void afficherMenuListerUtilisateurs(PrintStream socOut){
         ArrayList<String> listeUtilisateur = serveur.getListeNomsUtilisateurs();
         socOut.println(" ");
@@ -174,6 +177,7 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
+    // TODO Quentin: javadoc
     public void afficherMenuConversation(PrintStream socOut){
         socOut.println(" ");
         socOut.println("Que souhaitez-vous faire ?");
@@ -185,6 +189,7 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
+    // TODO Quentin: javadoc
     public void creerConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
 
         String line = "";
@@ -221,6 +226,7 @@ public class ClientThread extends Thread {
         afficherMenu = true;
     }
 
+    // TODO Maxime: javadoc
     public void rejoindreConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
         socOut.println("Entrez le nom de la conversation que vous souhaitez rejoindre:");
         socOut.println(FIN_AFFICHAGE);
@@ -230,6 +236,7 @@ public class ClientThread extends Thread {
         afficherMenu = true;
     }
 
+    // TODO Maxime: javadoc
     public void parlerAUtilisateur(PrintStream socOut, BufferedReader socIn) throws IOException {
         socOut.println("Entrez le nom de l'utilisateur à qui vous souhaitez parler");
         socOut.println(FIN_AFFICHAGE);
@@ -270,6 +277,7 @@ public class ClientThread extends Thread {
         afficherMenu = true;
     }
 
+    // TODO Maxime: javadoc
     public void envoyerMessage(Conversation conversation, String nomUtilisateur, String message){
         conversation.ajouterMessage(nomUtilisateur, message);
     }
@@ -278,8 +286,8 @@ public class ClientThread extends Thread {
         return nomUtilisateur;
     }
 
-    public EtatsPossibles gereMenuInitial(String line){
-        EtatsPossibles etat = EtatsPossibles.MENU_INITIAL;
+    // TODO Quentin: javadoc
+    public void gereMenuInitial(String line){
         if(!(line.length() > 1 || line.charAt(0) <= '0' || line.charAt(0) > '4')) {
             int choix = Integer.parseInt(line);
             switch (choix) {
@@ -298,11 +306,10 @@ public class ClientThread extends Thread {
             }
         }
         afficherMenu = true;
-        return etat;
     }
 
-    public EtatsPossibles gereMenuConversation(String line){
-        EtatsPossibles etat = EtatsPossibles.MENU_INITIAL;
+    // TODO Quentin: javadoc
+    public void gereMenuConversation(String line){
         if(!(line.length() > 1 || line.charAt(0) <= '0' || line.charAt(0) > '4')) {
             int choix = Integer.parseInt(line);
             switch (choix) {
@@ -321,7 +328,6 @@ public class ClientThread extends Thread {
             }
         }
         afficherMenu = true;
-        return etat;
     }
 }
 

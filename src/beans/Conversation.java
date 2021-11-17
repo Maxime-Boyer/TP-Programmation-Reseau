@@ -43,7 +43,13 @@ public class Conversation {
         ajouterUtilisateur(nomDuCorrespondant);
     }
 
-    // determine la nom d'une conversation grace à 2 noms selon l'ordre lexicographique
+    /**
+     * determine la nom d'une conversation grace à 2 noms selon l'ordre lexicographique
+     * @param nom1: le nom d'un utilisateur
+     * @param nom2: le nom d'un autre utilisateur
+     *            l'ordre de nom1 en nom2 n'importe pas
+     * @return: le nom de la conversation par ordre lexicographique
+     */
     public String determinerNomConversationAvec2NomsUtilisateurs(String nom1, String nom2){
         String nomConversation = "";
         if(nom1.compareTo(nom2) < 0){
@@ -63,7 +69,9 @@ public class Conversation {
         return conversationGroupe;
     }
 
-    // affiche la liste des utilisateurs participant à la conversation
+    /**
+     * affiche la liste des utilisateurs participant à la conversation
+     */
     public void afficherListeParticipants() {
         System.out.println("\nUtilisateurs participant à la conversation: ");
         for(int i = 0; i < listeParticipants.size(); i++){

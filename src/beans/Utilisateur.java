@@ -7,6 +7,10 @@ public class Utilisateur {
     private String nomUtilisateur;
     private ArrayList<String> listeNomsConversations;
 
+    /**
+     * TODO Maxime: javadoc
+     * @param nomUtilisateur
+     */
     public Utilisateur(String nomUtilisateur) {
         this.nomUtilisateur = nomUtilisateur;
     }
