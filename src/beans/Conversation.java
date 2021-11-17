@@ -1,5 +1,6 @@
 package beans;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class Conversation {
@@ -100,13 +101,38 @@ public class Conversation {
     /**
      * Liste l'ensemble des messages de la conversation et les affiche
      */
-    public void afficherMessages(){
-        System.out.println("\n---     Conversation "+nomConversation+"     ---");
+    public void afficherMessages(PrintStream socOut){
+        socOut.println(" ");
+        socOut.println("---     Conversation "+nomConversation+"     ---");
         Message message;
+
         for(int i = 0; i < listeMessages.size(); i++){
             message = listeMessages.get(i);
-            System.out.println("\n"+message.getNomAuteur()+" - "+message.getDateEnvoi());
-            System.out.println(message.getCorpsMessage());
+            socOut.println(" ");
+            socOut.println(message.getNomAuteur()+" - "+message.getDateEnvoi());
+            socOut.println(message.getCorpsMessage());
+        }
+    }
+
+    /**
+     * Liste les 10 derniers messages de la conversation et les affiche
+     */
+    public void afficher10Messages(PrintStream socOut){
+        socOut.println(" ");
+        socOut.println("---     Conversation "+nomConversation+"     ---");
+        Message message;
+
+        int debutBoucle = 0;
+
+        if(listeMessages.size() - 10 > 0){
+            debutBoucle = listeMessages.size() - 10;
+        }
+
+        for(int i = debutBoucle; i < listeMessages.size(); i++){
+            message = listeMessages.get(i);
+            socOut.println(" ");
+            socOut.println(message.getNomAuteur()+" - "+message.getDateEnvoi());
+            socOut.println(message.getCorpsMessage());
         }
     }
 

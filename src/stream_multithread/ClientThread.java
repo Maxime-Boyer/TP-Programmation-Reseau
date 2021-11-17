@@ -423,51 +423,37 @@ public class ClientThread extends Thread {
      * @throws IOException
      */
     public void parlerDansConversation(PrintStream socOut, BufferedReader socIn) throws IOException{
-        System.out.println("Parler dans la conversation: "+nomConversationActuelle);
-        afficherMenu = false;   // TODO remove
 
-        /*socOut.println("Entrez le nom de l'utilisateur à qui vous souhaitez parler");
-        socOut.println(FIN_AFFICHAGE);
-        String line = socIn.readLine();
-        String utilsateurCherche = line;
-        System.out.println("Contacter utilisateur: "+utilsateurCherche);
-        socOut.println("Entrez votre message à envoyer à " + utilsateurCherche);
-        socOut.println(FIN_AFFICHAGE);
-        line = socIn.readLine();
-        String message = line;
-        System.out.println("Message envoyé");
-        //socOut.println(FIN_AFFICHAGE);
-
-        boolean conversationTrouve = false;
-        Conversation conversation = null;
-        //TODO faire remonter le message au server
+        // determiner la conversation dans laquelle se trouve l'utilisateur
+        int indexConversation = 0;
         for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            conversation = serveur.getListeConversations().get(i);
-            if(conversation.getListeParticipants().size() == 2){
-                if((conversation.getListeParticipants().get(0).equals(utilsateurCherche) && conversation.getListeParticipants().get(1).equals(nomUtilisateur))
-                        || (conversation.getListeParticipants().get(1).equals(utilsateurCherche) && conversation.getListeParticipants().get(0).equals(nomUtilisateur))
-                ){
-                    envoyerMessage(conversation, nomUtilisateur, message);
-                    System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
-                    conversationTrouve = true;
-                }
+            if(serveur.getListeConversations().get(i).getNomConversation().equals(nomConversationActuelle)){
+                indexConversation = i;
+                System.out.println("Ca break "+i);
+                break;
             }
         }
-        if(!conversationTrouve){
-            conversation = new Conversation(nomUtilisateur, utilsateurCherche);
-            envoyerMessage(conversation, nomUtilisateur, message);
-            System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
-            serveur.getListeConversations().add(conversation);
-        }
 
-        conversation.afficherMessages();
-        etat = EtatsPossibles.MENU_INITIAL;
-        afficherMenu = true;*/
-    }
+        //afficher la conversaition
+        serveur.getListeConversations().get(indexConversation).afficher10Messages(socOut);
 
-    // TODO Quentin: javadoc
-    public void envoyerMessage(Conversation conversation, String nomUtilisateur, String message){
-        conversation.ajouterMessage(nomUtilisateur, message);
+        // afficher les consignes à l'utilisateur
+        socOut.println(" ");
+        socOut.println("--- Consignes ---------------------------------------------------");
+        socOut.println("- Ecrivez votre message puis appuyez sur Entrer pour l'envoyer. -");
+        socOut.println("- Ecrivez 'showAll' pour afficher toute la conversation         -");
+        socOut.println("- Ecriver 'exit' pour sortir de la conversation                 -");
+        socOut.println("----------------------------------------------------------------- ");
+        socOut.println(FIN_AFFICHAGE);
+
+        // si entree = showAll afficher tout la conversation
+
+        // si entree = exit sortir de la conversation et retourner à l'état initial
+
+        // synchro??
+
+        afficherMenu = false;   // TODO remove
+
     }
 }
 
