@@ -7,7 +7,6 @@ package stream_multithread; /***
 
 import beans.Conversation;
 import beans.Serveur;
-import beans.Utilisateur;
 
 import java.io.*;
 import java.net.*;
@@ -22,6 +21,7 @@ public class ClientThread extends Thread {
     private String nomUtilisateur;
     private EtatsPossibles etat;
     private String nomConversationActuelle;
+    private int tailleConversationActuelle;
     private boolean afficherMenu;
 
     public static String FIN_AFFICHAGE = "fin affichage";
@@ -46,6 +46,7 @@ public class ClientThread extends Thread {
         this.clientSocket = s;
         this.serveur = serveur;
         nomConversationActuelle = "";
+        tailleConversationActuelle = 0;
     }
 
     /**
@@ -301,6 +302,7 @@ public class ClientThread extends Thread {
             serveur.ajouterConversations(line);
             socOut.println("Conversation '"+line+"' créée.");
             nomConversationActuelle = line;
+            tailleConversationActuelle = 0;
             etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
         }
 
@@ -337,6 +339,7 @@ public class ClientThread extends Thread {
             if(conversation.getNomConversation().equals(line)){
                 conversationExiste = true;
                 nomConversationActuelle = line;
+                tailleConversationActuelle = conversation.getListeMessages().size();
                 socOut.println("Connexion à la conversation '"+line+"'...");
                 etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
                 break;
@@ -395,6 +398,7 @@ public class ClientThread extends Thread {
                 if(conversation.getNomConversation().equals(nomComversation)){
                     conversationExiste = true;
                     nomConversationActuelle = nomComversation;
+                    tailleConversationActuelle = conversation.getListeMessages().size();
                     socOut.println("Connexion à la conversation '"+nomComversation+"'...");
                     etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
                     break;
@@ -424,18 +428,20 @@ public class ClientThread extends Thread {
      */
     public void parlerDansConversation(PrintStream socOut, BufferedReader socIn) throws IOException{
 
+        socOut.println(" ");
+        socOut.println("---     Conversation "+nomConversationActuelle+"     ---");
+
         // determiner la conversation dans laquelle se trouve l'utilisateur
         int indexConversation = 0;
         for(int i = 0; i < serveur.getListeConversations().size(); i++){
             if(serveur.getListeConversations().get(i).getNomConversation().equals(nomConversationActuelle)){
                 indexConversation = i;
-                System.out.println("Ca break "+i);
                 break;
             }
         }
 
         //afficher la conversaition
-        serveur.getListeConversations().get(indexConversation).afficher10Messages(socOut);
+        serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, 10);
 
         // afficher les consignes à l'utilisateur
         socOut.println(" ");
@@ -444,16 +450,46 @@ public class ClientThread extends Thread {
         socOut.println("- Ecrivez 'showAll' pour afficher toute la conversation         -");
         socOut.println("- Ecriver 'exit' pour sortir de la conversation                 -");
         socOut.println("----------------------------------------------------------------- ");
-        socOut.println(FIN_AFFICHAGE);
 
-        // si entree = showAll afficher tout la conversation
+        //tant que l'utilisateur est dans la conversation
+        String line = "";
+        int nouvelleTailleConversationActuelle = 0;
+        while(true){
 
-        // si entree = exit sortir de la conversation et retourner à l'état initial
+            // affichage des nouveaux messages
+            nouvelleTailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
+            if(nouvelleTailleConversationActuelle > tailleConversationActuelle){
+                serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, nouvelleTailleConversationActuelle-tailleConversationActuelle);
+                tailleConversationActuelle = nouvelleTailleConversationActuelle;
+            }
+
+            // recuperation de l'entree utilisateur
+            socOut.println(FIN_AFFICHAGE);
+            line = socIn.readLine();
+
+            // si entree = exit sortir de la conversation et retourner à l'état initial
+            if(line.equals("exit")){
+                socOut.println(" ");
+                socOut.println("---     Sortie de la conversation    ---");
+                etat = EtatsPossibles.MENU_INITIAL;
+                afficherMenu = true;
+                break;
+            }
+
+            // si entree = showAll afficher tout la conversation
+            if(line.equals("showAll")){
+                socOut.println(" ");
+                socOut.println("---     Conversation "+nomConversationActuelle+"     ---");
+                tailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
+                serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, tailleConversationActuelle);
+            }
+            // sinon envoyer un message sur la conversation
+            else{
+                serveur.getListeConversations().get(indexConversation).ajouterMessage(nomUtilisateur, line);
+            }
+        }
 
         // synchro??
-
-        afficherMenu = false;   // TODO remove
-
     }
 }
 

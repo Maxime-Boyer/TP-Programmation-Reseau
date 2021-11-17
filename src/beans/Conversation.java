@@ -66,6 +66,14 @@ public class Conversation {
         return nomConversation;
     }
 
+    public ArrayList<String> getListeParticipants() {
+        return listeParticipants;
+    }
+
+    public ArrayList<Message> getListeMessages() {
+        return listeMessages;
+    }
+
     public boolean isConversationGroupe() {
         return conversationGroupe;
     }
@@ -99,33 +107,15 @@ public class Conversation {
     }
 
     /**
-     * Liste l'ensemble des messages de la conversation et les affiche
+     * Liste les N derniers messages de la conversation et les affiche
      */
-    public void afficherMessages(PrintStream socOut){
-        socOut.println(" ");
-        socOut.println("---     Conversation "+nomConversation+"     ---");
+    public void afficherNMessages(PrintStream socOut, int n){
+
         Message message;
-
-        for(int i = 0; i < listeMessages.size(); i++){
-            message = listeMessages.get(i);
-            socOut.println(" ");
-            socOut.println(message.getNomAuteur()+" - "+message.getDateEnvoi());
-            socOut.println(message.getCorpsMessage());
-        }
-    }
-
-    /**
-     * Liste les 10 derniers messages de la conversation et les affiche
-     */
-    public void afficher10Messages(PrintStream socOut){
-        socOut.println(" ");
-        socOut.println("---     Conversation "+nomConversation+"     ---");
-        Message message;
-
         int debutBoucle = 0;
 
-        if(listeMessages.size() - 10 > 0){
-            debutBoucle = listeMessages.size() - 10;
+        if(listeMessages.size() - n > 0){
+            debutBoucle = listeMessages.size() - n;
         }
 
         for(int i = debutBoucle; i < listeMessages.size(); i++){
@@ -134,9 +124,5 @@ public class Conversation {
             socOut.println(message.getNomAuteur()+" - "+message.getDateEnvoi());
             socOut.println(message.getCorpsMessage());
         }
-    }
-
-    public ArrayList<String> getListeParticipants() {
-        return listeParticipants;
     }
 }
