@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE listeConversation [
-        <!ELEMENT listeConversation (conversationPrivées|conversationGroupe)*>
+<!DOCTYPE listeConversations [
+        <!ELEMENT listeConversations (conversationPrivées|conversationGroupe)*>
         <!ELEMENT conversationPrivées (conversation)*>
         <!ELEMENT conversation (message|listeParticipant)*>
         <!ATTLIST conversation
@@ -15,7 +15,7 @@
         <!ELEMENT listeParticipant (participant)*>
         <!ELEMENT participant (#PCDATA)>
         ]>
-<listeConversation>
+<listeConversations>
     <conversationPrivées>
         <conversation id="1" utilisateur1="Quentin" utilisateur2="Maxime">
             <message dateEnvoi="2021-11-17 à 17h17" expediteur="Quentin">Salut c'est Quentin</message>
@@ -46,5 +46,5 @@
             <message dateEnvoi="2021-11-17 à 17h18" expediteur="Lucas">Yo gros !</message>
         </conversation>
     </conversationGroupe>
-</listeConversation>
+</listeConversations>
 

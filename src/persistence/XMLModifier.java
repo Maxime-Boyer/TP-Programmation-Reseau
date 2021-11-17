@@ -22,7 +22,7 @@ public class XMLModifier {
             dom = db.newDocument();
 
             // create the root element
-            Element rootEle = dom.createElement("roles");
+            Element listeConversations = dom.createElement("listeConversations");
 
             // create data elements and place them under root
             e = dom.createElement("role1");
