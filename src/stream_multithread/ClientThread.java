@@ -115,7 +115,9 @@ public class ClientThread extends Thread {
         }
     }
 
-    // TODO Maxime: javadoc + necessaire de faire une méthode pour ca?
+    /**
+     * Méthode permettant d'afficher le menu de choix d'actions à faire
+     */
     public void retourEtatInitial(){
         etat = EtatsPossibles.MENU_INITIAL;
         afficherMenu = true;
