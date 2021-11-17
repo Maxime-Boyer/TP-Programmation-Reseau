@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE listeConversations [
+        <!ELEMENT listeConversations (conversationPrivées|conversationGroupe)*>
+        <!ELEMENT conversationPrivées (conversation)*>
+        <!ELEMENT conversation (message|listeParticipant)*>
+        <!ATTLIST conversation
+                id CDATA #REQUIRED
+                utilisateur1 CDATA #IMPLIED
+                utilisateur2 CDATA #IMPLIED>
+        <!ELEMENT message (#PCDATA)>
+        <!ATTLIST message
+                dateEnvoi CDATA #REQUIRED
+                expediteur CDATA #REQUIRED>
+        <!ELEMENT conversationGroupe (conversation)*>
+        <!ELEMENT listeParticipant (participant)*>
+        <!ELEMENT participant (#PCDATA)>
+        ]>
+<listeConversations>
+    <conversationPrivées>
+        <conversation id="1" utilisateur1="Quentin" utilisateur2="Maxime">
+            <message dateEnvoi="2021-11-17 à 17h17" expediteur="Quentin">Salut c'est Quentin</message>
+            <message dateEnvoi="2021-11-17 à 17h18" expediteur="Quentin">Hey mec comment tu vas ?</message>
+        </conversation>
+        <conversation id="2" utilisateur1="Quentin" utilisateur2="Maxime">
+            <message dateEnvoi="2021-11-17 à 17h17" expediteur="Quentin">Salut c'est Quentin</message>
+            <message dateEnvoi="2021-11-17 à 17h18" expediteur="Quentin">Hey mec comment tu vas ?</message>
+        </conversation>
+    </conversationPrivées>
+    <conversationGroupe>
+        <conversation id="1">
+            <listeParticipant>
+                <participant>Quentin</participant>
+                <participant>Nathan</participant>
+                <participant>Loris</participant>
+            </listeParticipant>
+            <message dateEnvoi="2021-11-17 à 17h17" expediteur="Quentin">Salut c'est Quentin</message>
+            <message dateEnvoi="2021-11-17 à 17h18" expediteur="Loris">Hey mec comment tu vas ?</message>
+        </conversation>
+        <conversation id="1">
+            <listeParticipant>
+                <participant>Quentin</participant>
+                <participant>Lucas</participant>
+                <participant>Jack</participant>
+            </listeParticipant>
+            <message dateEnvoi="2021-11-17 à 17h17" expediteur="Jack">Salut c'est Jack</message>
+            <message dateEnvoi="2021-11-17 à 17h18" expediteur="Lucas">Yo gros !</message>
+        </conversation>
+    </conversationGroupe>
+</listeConversations>
+
