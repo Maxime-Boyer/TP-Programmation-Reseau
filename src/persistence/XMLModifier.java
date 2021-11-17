@@ -15,7 +15,7 @@ public class XMLModifier {
 
         // instance of a DocumentBuilderFactory
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        try {
+        /*try {
             // use factory to get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
             // create instance of DOM
@@ -63,10 +63,12 @@ public class XMLModifier {
         } catch (ParserConfigurationException pce) {
             System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
         }
+
+         */
     }
 
     public boolean readXML(String xml) {
-        rolev = new ArrayList<String>();
+        /*rolev = new ArrayList<String>();
         Document dom;
         // Make an  instance of the DocumentBuilderFactory
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -109,6 +111,8 @@ public class XMLModifier {
             System.err.println(ioe.getMessage());
         }
 
+
+         */
         return false;
     }
 

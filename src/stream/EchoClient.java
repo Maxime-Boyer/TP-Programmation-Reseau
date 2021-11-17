@@ -60,19 +60,23 @@ public class EchoClient {
         String line;
         System.out.println("Entrez votre identifiant puis taper entrer");
         while (true) {
-            //System.out.println("Début affichage");
-            line=stdIn.readLine(); //point d'attente
-            if (line.equals(".")) break;
-            socOut.println(line);
-
             //on affiche tout ce qui est renvoye par le thread
             String affichage = "";
 
-            while(!affichage.equals(ClientThread.FIN_AFFICHAGE)){
+            line=stdIn.readLine(); //point d'attente
+            socOut.println(line);
+
+            while(true){
                 affichage = socIn.readLine();
-                if(!affichage.equals(ClientThread.FIN_AFFICHAGE))
-                    System.out.println(affichage);
+
+                if(affichage.equals(ClientThread.FIN_AFFICHAGE) || affichage.equals(ClientThread.DECONNEXION))
+                    break;
+
+                System.out.println(affichage);
             }
+
+            if(affichage.equals(ClientThread.DECONNEXION))
+                break;
 
         }
         socOut.close();

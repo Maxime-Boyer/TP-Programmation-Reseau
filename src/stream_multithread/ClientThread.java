@@ -24,7 +24,9 @@ public class ClientThread extends Thread {
     private int tailleConversationActuelle;
     private boolean afficherMenu;
 
-    public static String FIN_AFFICHAGE = "fin affichage";
+    // hash pur eviter les effets de bord (saisie utilisateur meme code par inadvertance)
+    public static String FIN_AFFICHAGE = "b5d3a7a3a9290e714f2b06ec21cf5af613a7eff7e1674269b3940848afb1bdf6";
+    public static String DECONNEXION = "1a6d88ecd34873cbc5a9cbc0dbc1d01ce9fe24af75f835714160b9d5735da9a5";
 
     private enum EtatsPossibles {
         MENU_INITIAL,
@@ -78,7 +80,7 @@ public class ClientThread extends Thread {
                     switch (etat){
                         case MENU_INITIAL:
                             afficherMenuInitial(socOut);
-                            gereMenuInitial(socIn);
+                            gereMenuInitial(socOut, socIn);
                             break;
                         case MENU_LISTER_CONVERSATIONS:
                             afficherMenuListerConversations(socOut);
@@ -141,14 +143,22 @@ public class ClientThread extends Thread {
     public void afficherMenuListerConversations(PrintStream socOut){
         ArrayList<Conversation> listeConversation = serveur.getListeConversations();
         socOut.println(" ");
-        socOut.println("Ordre alphabétique des conversations");
+        socOut.println("Conversations de groupe:");
         Collections.sort(listeConversation, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
         int j = 1;
-        String utilisateur = "";
-        boolean peutAfficherConversation = true;
         for(int i = 0; i < listeConversation.size(); i++){
-            peutAfficherConversation = true;
-            if(listeConversation.get(i).getListeParticipants().size() == 2){
+            if(listeConversation.get(i).isConversationGroupe()){
+                socOut.println(" - " + j + " - " + listeConversation.get(i).getNomConversation());
+                j++;
+            }
+        }
+
+        j = 1;
+        String utilisateur = "";
+        socOut.println(" ");
+        socOut.println("Utilisateurs avec qui vous avez une conversation:");
+        for(int i = 0; i < listeConversation.size(); i++){
+            if(!listeConversation.get(i).isConversationGroupe()){
                 if((listeConversation.get(i).getListeParticipants().get(0).equals(nomUtilisateur) || listeConversation.get(i).getListeParticipants().get(1).equals(nomUtilisateur))){
                     if(listeConversation.get(i).getListeParticipants().get(0).equals(nomUtilisateur)){
                         utilisateur = listeConversation.get(i).getListeParticipants().get(1);
@@ -156,15 +166,12 @@ public class ClientThread extends Thread {
                     else{
                         utilisateur = listeConversation.get(i).getListeParticipants().get(0);
                     }
-                    socOut.println(" - " + j + " - Messagerie avec " + utilisateur);
+                    socOut.println(" - " + j + " - " + utilisateur);
                     j++;
                 }
-            }else{
-                socOut.println(" - " + j + " - " + listeConversation.get(i).getNomConversation());
-                j++;
             }
         }
-        //socOut.println(FIN_AFFICHAGE);
+
         afficherMenu = false;
     }
 
@@ -207,7 +214,7 @@ public class ClientThread extends Thread {
      * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void gereMenuInitial(BufferedReader socIn) throws IOException {
+    public void gereMenuInitial(PrintStream socOut, BufferedReader socIn) throws IOException {
 
         // si entree non prise en charge, affiche à nouveau le meme menu
         String line = socIn.readLine();
@@ -225,7 +232,7 @@ public class ClientThread extends Thread {
                     etat = EtatsPossibles.MENU_CONVERSATION;
                     break;
                 case 4:
-                    //TODO : gérer la déconnexion
+                    socOut.println(DECONNEXION);
                     break;
             }
         }
@@ -421,12 +428,14 @@ public class ClientThread extends Thread {
     }
 
     /**
-     * TODO Quentin: Javadoc
-     * @param socOut
-     * @param socIn
-     * @throws IOException
+     * Methode permettant à un utilisateur de parler sur la conversation
+     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
+     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
+     * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
     public void parlerDansConversation(PrintStream socOut, BufferedReader socIn) throws IOException{
+
+        // TODO Synchro
 
         socOut.println(" ");
         socOut.println("---     Conversation "+nomConversationActuelle+"     ---");
@@ -488,8 +497,6 @@ public class ClientThread extends Thread {
                 serveur.getListeConversations().get(indexConversation).ajouterMessage(nomUtilisateur, line);
             }
         }
-
-        // synchro??
     }
 }
 
