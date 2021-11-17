@@ -8,7 +8,7 @@ public class Utilisateur {
     private ArrayList<String> listeNomsConversations;
 
     /**
-     * TODO Maxime: javadoc
+     * Getter de l'attribut nomUtilisateur
      * @param nomUtilisateur
      */
     public Utilisateur(String nomUtilisateur) {

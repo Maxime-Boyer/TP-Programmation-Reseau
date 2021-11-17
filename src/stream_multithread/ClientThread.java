@@ -40,8 +40,8 @@ public class ClientThread extends Thread {
     };
 
     /**
-     * TODO Maxime javadoc Clienthread
-     * @param s
+     *
+     * @param s: le socket créé par le ServerMultiThreaded affecté à un client
      * @param serveur
      */
     ClientThread(Socket s, Serveur serveur) {
@@ -139,7 +139,10 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
-    // TODO Maxime: javadoc
+    /**
+     * Méthode gérant l'affichage de la liste des conversations
+     * @param socOut: permet de transmettre des informations au client
+     */
     public void afficherMenuListerConversations(PrintStream socOut){
         ArrayList<Conversation> listeConversation = serveur.getListeConversations();
         socOut.println(" ");
@@ -175,7 +178,10 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
-    // TODO Maxime: javadoc
+    /**
+     * Méthode gérant l'affichage de la liste des utilisateurs
+     * @param socOut: permet de transmettre des informations au client
+     */
     public void afficherMenuListerUtilisateurs(PrintStream socOut){
         ArrayList<String> listeUtilisateur = serveur.getListeNomsUtilisateurs();
         socOut.println(" ");

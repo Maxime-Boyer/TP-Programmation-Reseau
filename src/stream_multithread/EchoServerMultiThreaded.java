@@ -14,15 +14,14 @@ import java.util.ArrayList;
 
 public class EchoServerMultiThreaded  {
 
+    //TODO : ajouter état connecté ou non à un client
+
+
     /**
      * main method
      * @param args port
      *
      **/
-    /**
-     * TODO Maxime: javadoc (traduction ci-dessus)
-     * @param clientSocket
-     */
     public static void main(String args[]){
 
         ServerSocket listenSocket;

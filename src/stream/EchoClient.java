@@ -17,13 +17,9 @@ import java.sql.SQLOutput;
 
 public class EchoClient {
 
-
     /**
-     *  main method
-     *  accepts a connection, receives a message from client then sends an echo to the client
-     **/
-    /**
-     * TODO Maxime: javadoc (traduction ci dessus)
+     * Méthode main
+     * Accepte une connection, reçoit un message du client et ensuite envoi un echo au client
      * @param args
      * @throws IOException
      */

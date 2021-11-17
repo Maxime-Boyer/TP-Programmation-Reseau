@@ -13,27 +13,27 @@ public class Serveur {
     private ArrayList<Conversation> listeConversations = new ArrayList<>();
 
     /**
-     * TODO Maxime: javadoc
+     * Constructeur de Serveur initialisé au lancement du ServerMultiThreaded
      */
     public Serveur() {
     }
 
     /**
-     * TODO Maxime: javadoc
+     * Getter de la liste des noms d'utilisateurs
      */
     public ArrayList<String> getListeNomsUtilisateurs() {
         return listeNomsUtilisateurs;
     }
 
     /**
-     * TODO Maxime: javadoc
+     * Getter de la liste des noms de conversations
      */
     public ArrayList<Conversation> getListeConversations() {
         return listeConversations;
     }
 
     /**
-     * TODO Maxime: javadoc
+     * Méthode permettant d'ajouter une conversation à la liste des conversations
      * @param nomConversation
      */
     public void ajouterConversations(String nomConversation){
@@ -41,8 +41,9 @@ public class Serveur {
         listeConversations.add(conversation);
     }
 
+    //TODO : ajouter la notion d'utilisateur connecté ou non pour afficher que les utilisateurs : tous et aussi que les connecter
     /**
-     * TODO Maxime: javadoc
+     * Méthode permettant d'ajouter un utilisateur à la liste des utilisateurs
      * @param nomUtilisateur
      */
     public void connecterUtilisateur(String nomUtilisateur){
@@ -53,7 +54,7 @@ public class Serveur {
     }
 
     /**
-     * TODO Maxime: javadoc
+     * Méthode d'affichage de la liste des utilisateurs
      * @return
      */
     @Override
