@@ -50,7 +50,7 @@ public class Conversation {
      *            l'ordre de nom1 en nom2 n'importe pas
      * @return: le nom de la conversation par ordre lexicographique
      */
-    public String determinerNomConversationAvec2NomsUtilisateurs(String nom1, String nom2){
+    public static String determinerNomConversationAvec2NomsUtilisateurs(String nom1, String nom2){
         String nomConversation = "";
         if(nom1.compareTo(nom2) < 0){
             nomConversation = nom1 + " et " + nom2;

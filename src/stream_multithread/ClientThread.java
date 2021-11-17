@@ -21,6 +21,7 @@ public class ClientThread extends Thread {
     private Serveur serveur;
     private String nomUtilisateur;
     private EtatsPossibles etat;
+    private String nomConversationActuelle;
     private boolean afficherMenu;
 
     public static String FIN_AFFICHAGE = "fin affichage";
@@ -32,7 +33,8 @@ public class ClientThread extends Thread {
         MENU_CONVERSATION,
         CREER_CONVERSATION_GROUPE,
         REJOINDRE_CONVERSATION_GROUPE,
-        PARLER_A_UTILISATEUR
+        CONTACTER_UTILISATEUR,
+        PARLER_DANS_CONVERSATION
     };
 
     /**
@@ -43,6 +45,7 @@ public class ClientThread extends Thread {
     ClientThread(Socket s, Serveur serveur) {
         this.clientSocket = s;
         this.serveur = serveur;
+        nomConversationActuelle = "";
     }
 
     /**
@@ -71,7 +74,6 @@ public class ClientThread extends Thread {
 
             while (line != null) {
                 if(afficherMenu){
-                    System.out.println(etat);
                     switch (etat){
                         case MENU_INITIAL:
                             afficherMenuInitial(socOut);
@@ -95,8 +97,11 @@ public class ClientThread extends Thread {
                         case REJOINDRE_CONVERSATION_GROUPE:
                             rejoindreConversation(socOut, socIn);
                             break;
-                        case PARLER_A_UTILISATEUR:
-                            parlerAUtilisateur(socOut, socIn);
+                        case CONTACTER_UTILISATEUR:
+                            rejoindreConversationUtilisateur(socOut, socIn);
+                            break;
+                        case PARLER_DANS_CONVERSATION:
+                            parlerDansConversation(socOut, socIn);
                             break;
                     }
                 }
@@ -192,107 +197,6 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
-    /**
-     * Methode permettant de creer une communication
-     * Protections:
-     *      si la communication existe deja, message avertissement et envoie utilisateur vers le menu précédent
-     *      si le nom entré ne possede pas un seul caractere ou chiffre, on lui redemande de saisir le nom
-     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
-     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
-     * @throws IOException: jette les exceptions liees aux I/O utilisateur
-     */
-    public void creerConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
-
-        String line = "";
-        // tant que l'entree utilisateur ne contient pas un seul caractere lisible, on lui demande une entree
-        while(!line.matches(".*[0-9a-zA-Z]+.*")){
-            socOut.println(" ");
-            socOut.println("Entrez le nom de la conversation que vous souhaitez créer:");
-            socOut.println(FIN_AFFICHAGE);
-            line = socIn.readLine();
-        }
-
-        // rechercher si la conversation existe
-        Conversation conversation;
-        boolean conversationExiste = false;
-        for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            conversation = serveur.getListeConversations().get(i);
-
-            // si une conversation existe avec ce nom, retour état d'avant
-            if(conversation.getNomConversation().equals(line)){
-                conversationExiste = true;
-                socOut.println("La conversation '"+line+"' existe deja. Rejoignez là ou créez en une autre.");
-                etat = EtatsPossibles.MENU_CONVERSATION;
-                break;
-            }
-        }
-
-        if(!conversationExiste){
-            // si elle n'existe pas, on la crée
-            serveur.ajouterConversations(line);
-            socOut.println("Conversation '"+line+"' créée.");
-            etat = EtatsPossibles.MENU_INITIAL;     //TODO: raccorder à l'envoie d'un message
-        }
-
-        afficherMenu = true;
-    }
-
-    // TODO Maxime: javadoc
-    public void rejoindreConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
-        socOut.println("Entrez le nom de la conversation que vous souhaitez rejoindre:");
-        socOut.println(FIN_AFFICHAGE);
-        String line = socIn.readLine();
-        System.out.println("Rejoindre conversation: "+line);
-        etat = EtatsPossibles.MENU_INITIAL;
-        afficherMenu = true;
-    }
-
-    // TODO Maxime: javadoc
-    public void parlerAUtilisateur(PrintStream socOut, BufferedReader socIn) throws IOException {
-        socOut.println("Entrez le nom de l'utilisateur à qui vous souhaitez parler");
-        socOut.println(FIN_AFFICHAGE);
-        String line = socIn.readLine();
-        String utilsateurCherche = line;
-        System.out.println("Contacter utilisateur: "+utilsateurCherche);
-        socOut.println("Entrez votre message à envoyer à " + utilsateurCherche);
-        socOut.println(FIN_AFFICHAGE);
-        line = socIn.readLine();
-        String message = line;
-        System.out.println("Message envoyé");
-        //socOut.println(FIN_AFFICHAGE);
-
-        boolean conversationTrouve = false;
-        Conversation conversation = null;
-        //TODO faire remonter le message au server
-        for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            conversation = serveur.getListeConversations().get(i);
-            if(conversation.getListeParticipants().size() == 2){
-                if((conversation.getListeParticipants().get(0).equals(utilsateurCherche) && conversation.getListeParticipants().get(1).equals(nomUtilisateur))
-                || (conversation.getListeParticipants().get(1).equals(utilsateurCherche) && conversation.getListeParticipants().get(0).equals(nomUtilisateur))
-                ){
-                    envoyerMessage(conversation, nomUtilisateur, message);
-                    System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
-                    conversationTrouve = true;
-                }
-            }
-        }
-        if(!conversationTrouve){
-            conversation = new Conversation(nomUtilisateur, utilsateurCherche);
-            envoyerMessage(conversation, nomUtilisateur, message);
-            System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
-            serveur.getListeConversations().add(conversation);
-        }
-
-        conversation.afficherMessages();
-        etat = EtatsPossibles.MENU_INITIAL;
-        afficherMenu = true;
-    }
-
-    // TODO Maxime: javadoc
-    public void envoyerMessage(Conversation conversation, String nomUtilisateur, String message){
-        conversation.ajouterMessage(nomUtilisateur, message);
-    }
-
     public String getNomUtilisateur() {
         return nomUtilisateur;
     }
@@ -347,7 +251,7 @@ public class ClientThread extends Thread {
                     etat = EtatsPossibles.REJOINDRE_CONVERSATION_GROUPE;
                     break;
                 case 3:
-                    etat = EtatsPossibles.PARLER_A_UTILISATEUR;
+                    etat = EtatsPossibles.CONTACTER_UTILISATEUR;
                     break;
                 case 4:
                     etat = EtatsPossibles.MENU_INITIAL;
@@ -355,6 +259,215 @@ public class ClientThread extends Thread {
             }
         }
         afficherMenu = true;
+    }
+
+    /**
+     * Methode permettant de creer une conversation
+     * Protections:
+     *      si la conversation existe deja, message avertissement et envoie utilisateur vers le menu précédent
+     *      si le nom entré ne possede pas un seul caractere ou chiffre, on lui redemande de saisir le nom
+     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
+     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
+     * @throws IOException: jette les exceptions liees aux I/O utilisateur
+     */
+    public void creerConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
+
+        String line = "";
+        // tant que l'entree utilisateur ne contient pas un seul caractere lisible, on lui demande une entree
+        while(!line.matches(".*[0-9a-zA-Z]+.*")){
+            socOut.println(" ");
+            socOut.println("Entrez le nom de la conversation que vous souhaitez créer:");
+            socOut.println(FIN_AFFICHAGE);
+            line = socIn.readLine();
+        }
+
+        // rechercher si la conversation existe
+        Conversation conversation;
+        boolean conversationExiste = false;
+        for(int i = 0; i < serveur.getListeConversations().size(); i++){
+            conversation = serveur.getListeConversations().get(i);
+
+            // si une conversation existe avec ce nom, retour état d'avant
+            if(conversation.getNomConversation().equals(line)){
+                conversationExiste = true;
+                socOut.println("La conversation '"+line+"' existe deja. Rejoignez là ou créez en une autre.");
+                etat = EtatsPossibles.MENU_CONVERSATION;
+                break;
+            }
+        }
+
+        if(!conversationExiste){
+            // si elle n'existe pas, on la crée
+            serveur.ajouterConversations(line);
+            socOut.println("Conversation '"+line+"' créée.");
+            nomConversationActuelle = line;
+            etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
+        }
+
+        afficherMenu = true;
+    }
+
+    /**
+     * Methode permettant de rejoindre une conversation
+     * Protections:
+     *      si la conversation n'existe pas, message avertissement et envoie utilisateur vers le menu précédent
+     *      si le nom entré ne possede pas un seul caractere ou chiffre, on lui redemande de saisir le nom
+     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
+     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
+     * @throws IOException: jette les exceptions liees aux I/O utilisateur
+     */
+    public void rejoindreConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
+
+        String line = "";
+        // tant que l'entree utilisateur ne contient pas un seul caractere lisible, on lui demande une entree
+        while(!line.matches(".*[0-9a-zA-Z]+.*")){
+            socOut.println(" ");
+            socOut.println("Entrez le nom de la conversation que vous souhaitez rejoindre:");
+            socOut.println(FIN_AFFICHAGE);
+            line = socIn.readLine();
+        }
+
+        // rechercher si la conversation existe
+        Conversation conversation;
+        boolean conversationExiste = false;
+        for(int i = 0; i < serveur.getListeConversations().size(); i++){
+            conversation = serveur.getListeConversations().get(i);
+
+            // si une conversation existe avec ce nom, retour état d'avant
+            if(conversation.getNomConversation().equals(line)){
+                conversationExiste = true;
+                nomConversationActuelle = line;
+                socOut.println("Connexion à la conversation '"+line+"'...");
+                etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
+                break;
+            }
+        }
+
+        if(!conversationExiste){
+            // si elle n'existe pas, on avertit l'utilisateur
+            socOut.println("La conversation '"+line+"' n'existe pas. Créez là ou rejoignez en une autre.");
+            etat = EtatsPossibles.MENU_CONVERSATION;
+        }
+
+        afficherMenu = true;
+    }
+
+    /**
+     * Methode permettant de contacter un utilisateur dans une conversation privee
+     * Protections:
+     *      Si l'utilisateur n'existe pas, avertissement et retour au menu précédent
+     *      si le nom entré ne possede pas un seul caractere ou chiffre, on lui redemande de saisir le nom
+     *      si la conversation n'existe pas, elle est créée et l'utilisateur est averti
+     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
+     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
+     * @throws IOException: jette les exceptions liees aux I/O utilisateur
+     */
+    public void rejoindreConversationUtilisateur(PrintStream socOut, BufferedReader socIn) throws IOException {
+
+        String line = "";
+        // tant que l'entree utilisateur ne contient pas un seul caractere lisible, on lui demande une entree
+        while(!line.matches(".*[0-9a-zA-Z]+.*")){
+            socOut.println(" ");
+            socOut.println("Entrez le nom de l'utilisateur à qui vous souhaitez parler:");
+            socOut.println(FIN_AFFICHAGE);
+            line = socIn.readLine();
+        }
+
+        //recherche si l'utilisateur existe
+        boolean utilisateurExiste = false;
+        for(int i = 0; i < serveur.getListeNomsUtilisateurs().size(); i++) {
+
+            if(serveur.getListeNomsUtilisateurs().get(i).equals(line)){
+                utilisateurExiste = true;
+                break;
+            }
+        }
+
+        if(utilisateurExiste){
+            // rechercher si la conversation existe
+            Conversation conversation;
+            boolean conversationExiste = false;
+            String nomComversation = Conversation.determinerNomConversationAvec2NomsUtilisateurs(line, nomUtilisateur);
+            for(int i = 0; i < serveur.getListeConversations().size(); i++){
+                conversation = serveur.getListeConversations().get(i);
+
+                // si une conversation existe avec ce nom, retour état d'avant
+                if(conversation.getNomConversation().equals(nomComversation)){
+                    conversationExiste = true;
+                    nomConversationActuelle = nomComversation;
+                    socOut.println("Connexion à la conversation '"+nomComversation+"'...");
+                    etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
+                    break;
+                }
+            }
+
+            if(!conversationExiste){
+                // si elle n'existe pas, on crée la conversation
+                serveur.ajouterConversations(nomComversation);
+                socOut.println("Création de la conversation avec '"+line+"'. Vous pouvez désormais communiquer avec "+line+".");
+                etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
+            }
+        }
+        else{
+            socOut.println("L'utilisateur '"+line+"' n'existe pas.");
+            etat = EtatsPossibles.MENU_CONVERSATION;
+        }
+
+        afficherMenu = true;
+    }
+
+    /**
+     * TODO Quentin: Javadoc
+     * @param socOut
+     * @param socIn
+     * @throws IOException
+     */
+    public void parlerDansConversation(PrintStream socOut, BufferedReader socIn) throws IOException{
+        System.out.println("Parler dans la conversation: "+nomConversationActuelle);
+        afficherMenu = false;   // TODO remove
+
+        /*socOut.println("Entrez le nom de l'utilisateur à qui vous souhaitez parler");
+        socOut.println(FIN_AFFICHAGE);
+        String line = socIn.readLine();
+        String utilsateurCherche = line;
+        System.out.println("Contacter utilisateur: "+utilsateurCherche);
+        socOut.println("Entrez votre message à envoyer à " + utilsateurCherche);
+        socOut.println(FIN_AFFICHAGE);
+        line = socIn.readLine();
+        String message = line;
+        System.out.println("Message envoyé");
+        //socOut.println(FIN_AFFICHAGE);
+
+        boolean conversationTrouve = false;
+        Conversation conversation = null;
+        //TODO faire remonter le message au server
+        for(int i = 0; i < serveur.getListeConversations().size(); i++){
+            conversation = serveur.getListeConversations().get(i);
+            if(conversation.getListeParticipants().size() == 2){
+                if((conversation.getListeParticipants().get(0).equals(utilsateurCherche) && conversation.getListeParticipants().get(1).equals(nomUtilisateur))
+                        || (conversation.getListeParticipants().get(1).equals(utilsateurCherche) && conversation.getListeParticipants().get(0).equals(nomUtilisateur))
+                ){
+                    envoyerMessage(conversation, nomUtilisateur, message);
+                    System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
+                    conversationTrouve = true;
+                }
+            }
+        }
+        if(!conversationTrouve){
+            conversation = new Conversation(nomUtilisateur, utilsateurCherche);
+            envoyerMessage(conversation, nomUtilisateur, message);
+            System.out.println("*** " + message + " *** envoyé par " + nomUtilisateur + " à " + utilsateurCherche);
+            serveur.getListeConversations().add(conversation);
+        }
+
+        conversation.afficherMessages();
+        etat = EtatsPossibles.MENU_INITIAL;
+        afficherMenu = true;*/
+    }
+
+    // TODO Quentin: javadoc
+    public void envoyerMessage(Conversation conversation, String nomUtilisateur, String message){
+        conversation.ajouterMessage(nomUtilisateur, message);
     }
 }
 
