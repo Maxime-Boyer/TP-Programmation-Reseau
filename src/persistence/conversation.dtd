@@ -1,0 +1,9 @@
+<!ELEMENT conversation (listeParticipants|message)*>
+        <!ATTLIST conversation
+                nomConversation CDATA #REQUIRED>
+        <!ELEMENT listeParticipants (participant)*>
+        <!ELEMENT participant (#PCDATA)>
+        <!ELEMENT message (#PCDATA)>
+        <!ATTLIST message
+                dateEnvoi CDATA #REQUIRED
+                expediteur CDATA #REQUIRED>

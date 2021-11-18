@@ -4,15 +4,28 @@ import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
+
+import beans.Conversation;
+import beans.Message;
 import org.xml.sax.*;
 import org.w3c.dom.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class XMLModifier {
 
-    public void saveToXML(String xml) {
+    private String role1 = null;
+    private String role2 = null;
+    private String role3 = null;
+    private String role4 = null;
+    private ArrayList<String> rolev;
+
+    public void saveToXML(Conversation conversation) {
         Document dom;
         Element e = null;
-/*
+
         // instance of a DocumentBuilderFactory
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
@@ -22,40 +35,48 @@ public class XMLModifier {
             dom = db.newDocument();
 
             // create the root element
-            Element listeConversations = dom.createElement("listeConversations");
+            Element elemConversation = dom.createElement("conversation");
 
+            String nomConversation = conversation.getNomConversation();
+            elemConversation.setAttribute("nomConversation", nomConversation);
+            ArrayList<Message> listeMessages = conversation.getListeMessages();
+            ArrayList<String> listeParticipants = conversation.getListeParticipants();
 
+            Element elemListeParticipants = dom.createElement("listeParticipants");
 
-            // create data elements and place them under root
-            e = dom.createElement("role1");
-            e.appendChild(dom.createTextNode(role1));
-            listeConversations.appendChild(e);
+            for(int i = 0; i < listeParticipants.size(); i++) {
+                // create data elements and place them under root
+                e = dom.createElement("participant");
+                e.setNodeValue(listeParticipants.get(i));
+                //e.appendChild(dom.createTextNode(listeParticipants.get(i)));
+                elemListeParticipants.appendChild(e);
+            }
 
-            e = dom.createElement("role2");
-            e.appendChild(dom.createTextNode(role2));
-            listeConversations.appendChild(e);
+            elemConversation.appendChild(elemListeParticipants);
 
-            e = dom.createElement("role3");
-            e.appendChild(dom.createTextNode(role3));
-            listeConversations.appendChild(e);
+            for(int j = 0; j < listeMessages.size(); j++){
+                e = dom.createElement("message");
+                e.setAttribute("dateEnvoi", listeMessages.get(j).getDateEnvoi());
+                e.setAttribute("expediteur", listeMessages.get(j).getNomAuteur());
+                e.setNodeValue(listeMessages.get(j).getCorpsMessage());
+                elemConversation.appendChild(e);
+            }
 
-            e = dom.createElement("role4");
-            e.appendChild(dom.createTextNode(role4));
-            listeConversations.appendChild(e);
-
-            dom.appendChild(listeConversations);
+            dom.appendChild(elemConversation);
 
             try {
                 Transformer tr = TransformerFactory.newInstance().newTransformer();
                 tr.setOutputProperty(OutputKeys.INDENT, "yes");
                 tr.setOutputProperty(OutputKeys.METHOD, "xml");
                 tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-                tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
+                tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "conversation.dtd");
                 tr.setOutputProperty("{http://xml.Apache.org/xslt}indent-amount", "4");
+
+                String nomFichier = nomConversation.replaceAll("\\s", "");
 
                 // send DOM to file
                 tr.transform(new DOMSource(dom),
-                        new StreamResult(new FileOutputStream(xml)));
+                        new StreamResult(new FileOutputStream("src/FichierXML/" + nomFichier + ".xml")));
 
             } catch (TransformerException te) {
                 System.out.println(te.getMessage());
@@ -65,7 +86,7 @@ public class XMLModifier {
         } catch (ParserConfigurationException pce) {
             System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
         }
-        */
+
 
     }
 
