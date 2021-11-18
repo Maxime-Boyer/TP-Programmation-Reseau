@@ -29,6 +29,12 @@ public class ExplorateurFichier {
         this.listDirectory(this.initialpath);
     }
 
+    public File[] getNomDesFichiers() {
+        File file = new File(this.initialpath);
+        File[] files = file.listFiles();
+        return files;
+    }
+
     private void listDirectory(String dir) {
         File file = new File(dir);
         File[] files = file.listFiles();

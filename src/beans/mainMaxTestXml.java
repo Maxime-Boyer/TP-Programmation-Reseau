@@ -18,7 +18,11 @@ public class mainMaxTestXml {
 
         XMLModifier xmlModifier = new XMLModifier();
 
-        xmlModifier.saveToXML(conversation);
+        xmlModifier.stockerConversation(conversation);
+
+        xmlModifier.stockerMessage(conversation, new Message("Lola", "J'suis trop une folle"));
+
+        xmlModifier.afficherConversation(conversation.getNomConversation());
 
     }
 }
