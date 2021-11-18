@@ -2,6 +2,8 @@ package beans;
 
 import persistence.XMLModifier;
 
+import java.util.ArrayList;
+
 public class mainMaxTestXml {
 
     public static void main(String args[]){
@@ -40,7 +42,18 @@ public class mainMaxTestXml {
 
         xmlModifier.stockerMessage(conversation2, new Message("Max", "J'suis trop un fou"));
 
-        xmlModifier.afficherConversation(conversation2.getNomConversation());
+        //xmlModifier.afficherConversation(conversation2.getNomConversation());
 
+        ArrayList<Message> listeStringMessage = xmlModifier.getListeMessagesConversation(conversation2.getNomConversation());
+        ArrayList<String> listeStringParticipant = xmlModifier.getListeParticipantsConversation(conversation2.getNomConversation());
+        System.out.println("********************************");
+        for(int i = 0; i < listeStringMessage.size(); i++){
+            System.out.println(listeStringMessage.get(i).toString());
+        }
+        System.out.println("********************************");
+        for(int i = 0; i < listeStringParticipant.size(); i++){
+            System.out.println(listeStringParticipant.get(i));
+        }
+        System.out.println("********************************");
     }
 }

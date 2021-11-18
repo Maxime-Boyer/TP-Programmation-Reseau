@@ -14,6 +14,7 @@ import org.w3c.dom.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class XMLModifier {
@@ -25,14 +26,11 @@ public class XMLModifier {
 
 
         for(int i = 0; i < listFichier.length; i++) {
-            System.out.println("on est la");
             String nomFichier = conversation.getNomConversation().replaceAll("\\s", "") + ".xml";
-            System.out.println(listFichier[i].getName());
             //Si le fichier existe déjà on ajoute des informations à la conversation : messages
             if (listFichier[i].getName().equals(nomFichier)) {
                 fichierTrouve = true;
                 try {
-                    System.out.println("on est ici");
 
                     String file = "src/FichierXML/" + nomFichier;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -90,14 +88,11 @@ public class XMLModifier {
 
 
         for(int i = 0; i < listFichier.length; i++) {
-            System.out.println("on est la");
             String nomFichier = conversation.getNomConversation().replaceAll("\\s", "") + ".xml";
-            System.out.println(listFichier[i].getName());
             //Si le fichier existe déjà on ajoute des informations à la conversation : messages
             if (listFichier[i].getName().equals(nomFichier)) {
                 fichierTrouve = true;
                 try {
-                    System.out.println("on est ici");
 
                     String file = "src/FichierXML/" + nomFichier;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -238,7 +233,6 @@ public class XMLModifier {
 
 
         for(int i = 0; i < listFichier.length; i++) {
-            System.out.println(listFichier[i].getName());
             //Si le fichier existe déjà on ajoute des informations à la conversation : messages
             if (listFichier[i].getName().equals(nomFichier)) {
                 Document dom;
@@ -277,4 +271,96 @@ public class XMLModifier {
 
     }
 
+    public ArrayList<String> getListeParticipantsConversation(String nomConversation) {
+
+        String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
+
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+        File[] listFichier = explorateurFichier.getNomDesFichiers();
+        boolean fichierTrouve = false;
+
+        ArrayList<String> listeNomsParticipants = new ArrayList<>();
+
+        for(int i = 0; i < listFichier.length; i++) {
+            //Si le fichier existe déjà on ajoute des informations à la conversation : messages
+            if (listFichier[i].getName().equals(nomFichier)) {
+                Document dom;
+                // Make an  instance of the DocumentBuilderFactory
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                try {
+                    // use the factory to take an instance of the document builder
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    // parse using the builder to get the DOM mapping of the
+                    // XML file
+                    dom = db.parse("src/FichierXML/" + nomFichier);
+
+                    Element doc = dom.getDocumentElement();
+
+                    NodeList listeParticipant = doc.getElementsByTagName("participant");
+
+                    for(int j = 0; j < listeParticipant.getLength(); j++){
+                        listeNomsParticipants.add(listeParticipant.item(j).getTextContent());
+                    }
+
+                } catch (ParserConfigurationException pce) {
+                    System.out.println(pce.getMessage());
+                } catch (SAXException se) {
+                    System.out.println(se.getMessage());
+                } catch (IOException ioe) {
+                    System.err.println(ioe.getMessage());
+                }
+            }
+        }
+
+        return listeNomsParticipants;
+    }
+
+    public ArrayList<Message> getListeMessagesConversation(String nomConversation) {
+
+        String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
+
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+        File[] listFichier = explorateurFichier.getNomDesFichiers();
+        boolean fichierTrouve = false;
+
+        ArrayList<Message> listeMessages = new ArrayList<>();
+
+
+        for(int i = 0; i < listFichier.length; i++) {
+            //Si le fichier existe déjà on ajoute des informations à la conversation : messages
+            if (listFichier[i].getName().equals(nomFichier)) {
+                Document dom;
+                // Make an  instance of the DocumentBuilderFactory
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                try {
+                    // use the factory to take an instance of the document builder
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    // parse using the builder to get the DOM mapping of the
+                    // XML file
+                    dom = db.parse("src/FichierXML/" + nomFichier);
+
+                    Element doc = dom.getDocumentElement();
+
+                    NodeList listeMessage = doc.getElementsByTagName("message");
+
+                    for(int j = 0; j < listeMessage.getLength(); j++){
+                        NamedNodeMap listeAttributs = listeMessage.item(j).getAttributes();
+                        listeMessages.add(new Message(listeAttributs.item(1).getTextContent(), listeMessage.item(j).getTextContent(), listeAttributs.item(0).getTextContent()));
+                    }
+                } catch (ParserConfigurationException pce) {
+                    System.out.println(pce.getMessage());
+                } catch (SAXException se) {
+                    System.out.println(se.getMessage());
+                } catch (IOException ioe) {
+                    System.err.println(ioe.getMessage());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return listeMessages;
+    }
+
 }
+

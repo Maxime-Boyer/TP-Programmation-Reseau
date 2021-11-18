@@ -1,5 +1,6 @@
 package beans;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,6 +24,13 @@ public class Message {
         this.dateEnvoi = new Date(System.currentTimeMillis());
     }
 
+    public Message(String nomAuteur, String corpsMessage, String stringDateEnvoi) throws ParseException {
+        this.nomAuteur = nomAuteur;
+        this.corpsMessage = corpsMessage;
+        formatDate= new SimpleDateFormat("yyyy-MM-dd 'à' HH'h'mm");
+        this.dateEnvoi = formatDate.parse(stringDateEnvoi);
+    }
+
     public String getNomAuteur() {
         return nomAuteur;
     }
@@ -33,5 +41,15 @@ public class Message {
 
     public String getDateEnvoi() {
         return formatDate.format(dateEnvoi);
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "nomAuteur='" + nomAuteur + '\'' +
+                ", corpsMessage='" + corpsMessage + '\'' +
+                ", dateEnvoi=" + dateEnvoi +
+                ", formatDate=" + formatDate +
+                '}';
     }
 }
