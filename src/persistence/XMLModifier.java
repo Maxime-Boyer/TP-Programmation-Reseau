@@ -12,10 +12,10 @@ public class XMLModifier {
     public void saveToXML(String xml) {
         Document dom;
         Element e = null;
-
+/*
         // instance of a DocumentBuilderFactory
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        /*try {
+        try {
             // use factory to get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
             // create instance of DOM
@@ -24,24 +24,26 @@ public class XMLModifier {
             // create the root element
             Element listeConversations = dom.createElement("listeConversations");
 
+
+
             // create data elements and place them under root
             e = dom.createElement("role1");
             e.appendChild(dom.createTextNode(role1));
-            rootEle.appendChild(e);
+            listeConversations.appendChild(e);
 
             e = dom.createElement("role2");
             e.appendChild(dom.createTextNode(role2));
-            rootEle.appendChild(e);
+            listeConversations.appendChild(e);
 
             e = dom.createElement("role3");
             e.appendChild(dom.createTextNode(role3));
-            rootEle.appendChild(e);
+            listeConversations.appendChild(e);
 
             e = dom.createElement("role4");
             e.appendChild(dom.createTextNode(role4));
-            rootEle.appendChild(e);
+            listeConversations.appendChild(e);
 
-            dom.appendChild(rootEle);
+            dom.appendChild(listeConversations);
 
             try {
                 Transformer tr = TransformerFactory.newInstance().newTransformer();
@@ -63,8 +65,8 @@ public class XMLModifier {
         } catch (ParserConfigurationException pce) {
             System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
         }
+        */
 
-         */
     }
 
     public boolean readXML(String xml) {
