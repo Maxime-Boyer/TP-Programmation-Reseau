@@ -18,12 +18,6 @@ import java.util.ArrayList;
 
 public class XMLModifier {
 
-    private String role1 = null;
-    private String role2 = null;
-    private String role3 = null;
-    private String role4 = null;
-    private ArrayList<String> rolev;
-
     public void stockerMessage(Conversation conversation, Message message){
         ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
@@ -95,35 +89,59 @@ public class XMLModifier {
         boolean fichierTrouve = false;
 
 
-        for(int i = 0; i < listFichier.length; i++){
-
-            //Si le fichier existe déjà on ajoute des informations à la conversation : particpant
-            if(listFichier[i].getName().equals(conversation.getNomConversation())){
+        for(int i = 0; i < listFichier.length; i++) {
+            System.out.println("on est la");
+            String nomFichier = conversation.getNomConversation().replaceAll("\\s", "") + ".xml";
+            System.out.println(listFichier[i].getName());
+            //Si le fichier existe déjà on ajoute des informations à la conversation : messages
+            if (listFichier[i].getName().equals(nomFichier)) {
                 fichierTrouve = true;
+                try {
+                    System.out.println("on est ici");
+
+                    String file = "src/FichierXML/" + nomFichier;
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    Document doc = db.parse(file);
+                    // create instance of DOM
+                    Document dom = db.newDocument();
+
+                    Node elemListeParticipant = doc.getElementsByTagName("listeParticipants").item(0);
+
+                    Element e = doc.createElement("participant");
+                    e.setTextContent(nomUtilisateur);
+                    elemListeParticipant.appendChild(e);
+
+                    try {
+                        Transformer tr = TransformerFactory.newInstance().newTransformer();
+                        tr.setOutputProperty(OutputKeys.INDENT, "yes");
+                        tr.setOutputProperty(OutputKeys.METHOD, "xml");
+                        tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                        tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "conversation.dtd");
+                        tr.setOutputProperty("{http://xml.Apache.org/xslt}indent-amount", "4");
+
+                        // send DOM to file
+                        tr.transform(new DOMSource(doc),
+                                new StreamResult(new FileOutputStream(file)));
+
+                    } catch (TransformerException te) {
+                        System.out.println(te.getMessage());
+                    } catch (IOException ioe) {
+                        System.out.println(ioe.getMessage());
+                    }
+
+                } catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                }
+                break;
             }
-            break;
-        }
-        if(!fichierTrouve){
-            stockerConversation(conversation);
-        }
-    }
-
-    public void stockerNouveauParticipant(Conversation conversation, ArrayList<String> listNomUtilisateur){
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
-        File[] listFichier = explorateurFichier.getNomDesFichiers();
-        boolean fichierTrouve = false;
-
-
-        for(int i = 0; i < listFichier.length; i++){
-
-            //Si le fichier existe déjà on ajoute des informations à la conversation : particpant
-            if(listFichier[i].getName().equals(conversation.getNomConversation())){
-                fichierTrouve = true;
+            if (!fichierTrouve) {
+                stockerConversation(conversation);
             }
-            break;
-        }
-        if(!fichierTrouve){
-            stockerConversation(conversation);
         }
     }
 
@@ -243,7 +261,7 @@ public class XMLModifier {
 
                     NodeList listeMessage = doc.getElementsByTagName("message");
 
-                    for(int j = 0; j < listeParticipant.getLength(); j++){
+                    for(int j = 0; j < listeMessage.getLength(); j++){
                         NamedNodeMap listeAttributs = listeMessage.item(j).getAttributes();
                         System.out.println("Message de " + listeAttributs.item(1).getTextContent() + " envoyé à " + listeAttributs.item(0).getTextContent() + " : " + listeMessage.item(j).getTextContent());
                     }

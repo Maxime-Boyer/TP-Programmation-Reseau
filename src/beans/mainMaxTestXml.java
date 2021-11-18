@@ -16,13 +16,31 @@ public class mainMaxTestXml {
         conversation.ajouterMessage("Patrice", "J'peux pas j'ai tir à l'arc");
         conversation.ajouterMessage("Tom", "Je viens pour minuit");
 
+        Conversation conversation2 = new Conversation("Galere au parc");
+        conversation2.ajouterUtilisateur(new Utilisateur("Solène").getNomUtilisateur());
+        conversation2.ajouterUtilisateur(new Utilisateur("Cécé").getNomUtilisateur());
+        conversation2.ajouterUtilisateur(new Utilisateur("Margo").getNomUtilisateur());
+        conversation2.ajouterUtilisateur(new Utilisateur("Alex").getNomUtilisateur());
+        conversation2.ajouterMessage("Solène", "Y'a la hendeck");
+        conversation2.ajouterMessage("Cécé", "Courez");
+        conversation2.ajouterMessage("Alex", "Faut fuire la");
+        conversation2.ajouterMessage("Alex", "J'ai oublié des trucs");
+        conversation2.ajouterMessage("Margo", "Il est quelle heure ?");
+
         XMLModifier xmlModifier = new XMLModifier();
 
         xmlModifier.stockerConversation(conversation);
+        xmlModifier.stockerConversation(conversation2);
 
         xmlModifier.stockerMessage(conversation, new Message("Lola", "J'suis trop une folle"));
 
-        xmlModifier.afficherConversation(conversation.getNomConversation());
+        xmlModifier.stockerNouveauParticipant(conversation, "Lucas");
+
+        xmlModifier.stockerNouveauParticipant(conversation2, "Max");
+
+        xmlModifier.stockerMessage(conversation2, new Message("Max", "J'suis trop un fou"));
+
+        xmlModifier.afficherConversation(conversation2.getNomConversation());
 
     }
 }
