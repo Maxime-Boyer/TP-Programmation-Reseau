@@ -26,6 +26,11 @@ public class XMLModifier {
         Document dom;
         Element e = null;
 
+
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+
+        explorateurFichier.list();
+
         // instance of a DocumentBuilderFactory
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
