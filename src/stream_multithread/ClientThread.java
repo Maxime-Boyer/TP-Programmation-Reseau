@@ -13,6 +13,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 
 public class ClientThread extends Thread {
 
@@ -23,6 +24,10 @@ public class ClientThread extends Thread {
     private String nomConversationActuelle;
     private int tailleConversationActuelle;
     private boolean afficherMenu;
+
+    //Nathan
+    private BufferedReader socIn;
+    private PrintStream socOut;
 
     // hash pur eviter les effets de bord (saisie utilisateur meme code par inadvertance)
     public static String FIN_AFFICHAGE = "b5d3a7a3a9290e714f2b06ec21cf5af613a7eff7e1674269b3940848afb1bdf6";
@@ -51,6 +56,15 @@ public class ClientThread extends Thread {
         tailleConversationActuelle = 0;
     }
 
+    //Nathan
+    ClientThread(Socket s, Serveur serveur,String nomUtilisateur, BufferedReader socIn, PrintStream socOut) {
+        this.clientSocket = s;
+        this.nomUtilisateur = nomUtilisateur;
+        this.serveur = serveur;
+        this.socIn = socIn;
+        this.socOut = socOut;
+    }
+
     /**
      * Lance un nouveau thread qui gèrera le cycle de vie d'une seul client au sein de l'application
      **/
@@ -59,14 +73,16 @@ public class ClientThread extends Thread {
         try {
 
             // initialisation des canaux de communication
+            /*
             BufferedReader socIn = null;
             socIn = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
             PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
+            */
             String line = socIn.readLine();
 
             // connection de l'utilisateur
-            nomUtilisateur = line;
+            //nomUtilisateur = line;
             serveur.connecterUtilisateur(nomUtilisateur);
             System.out.println("\n"+serveur);
             etat = EtatsPossibles.MENU_INITIAL;
@@ -355,6 +371,10 @@ public class ClientThread extends Thread {
                 conversationExiste = true;
                 nomConversationActuelle = line;
                 tailleConversationActuelle = conversation.getListeMessages().size();
+
+                // ajout du client dans cette conversation
+                conversation.ajouterUtilisateur(nomUtilisateur);
+
                 socOut.println("Connexion à la conversation '"+line+"'...");
                 etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
                 break;
@@ -414,6 +434,10 @@ public class ClientThread extends Thread {
                     conversationExiste = true;
                     nomConversationActuelle = nomComversation;
                     tailleConversationActuelle = conversation.getListeMessages().size();
+
+                    // ajout du client dans cette conversation
+                    conversation.ajouterUtilisateur(nomUtilisateur);
+
                     socOut.println("Connexion à la conversation '"+nomComversation+"'...");
                     etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
                     break;
@@ -503,9 +527,19 @@ public class ClientThread extends Thread {
             // sinon envoyer un message sur la conversation
             else{
                 serveur.getListeConversations().get(indexConversation).ajouterMessage(nomUtilisateur, line);
+
+                //Choix du ou des clients à qui on envoie le message
+                for (Map.Entry<String, ClientThread> client : EchoServerMultiThreaded.clientThreads.entrySet()) {
+                    for(String participant : serveur.getListeConversations().get(indexConversation).getListeParticipants()) {
+                        if((client.getKey().equals(participant)) && !(client.getKey() == nomUtilisateur)) {
+                            client.getValue().getSocout().println(nomUtilisateur + ":" + line);
+                        }
+                    }
+                }
             }
         }
     }
+    private PrintStream getSocout() {return this.socOut; }
 }
 
   

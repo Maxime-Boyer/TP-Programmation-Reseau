@@ -11,12 +11,13 @@ import beans.Serveur;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EchoServerMultiThreaded  {
 
     //TODO : ajouter état connecté ou non à un client
 
-
+    static HashMap<String, ClientThread> clientThreads = new HashMap<>();
     /**
      * main method
      * @param args port
@@ -39,7 +40,21 @@ public class EchoServerMultiThreaded  {
             // ecoute de nouvelles connexion, creation d'un nouveau thread en cas de connexion
             while (true) {
                 Socket clientSocket = listenSocket.accept();
-                ClientThread ct = new ClientThread(clientSocket,serveur);
+                System.out.println("Connexion from:" + clientSocket.getInetAddress());
+                //Buffer de lecture de la socket
+                BufferedReader socInClient = null;
+                socInClient = new BufferedReader(
+                        new InputStreamReader(clientSocket.getInputStream()));
+
+                //Buffer de sortie de la socket
+                PrintStream socOutClient = null;
+                socOutClient = new PrintStream(clientSocket.getOutputStream());
+
+                //On recupere le username de l'utilisateur
+                String nomUtilisateur = socInClient.readLine();
+
+                ClientThread ct = new ClientThread(clientSocket, serveur, nomUtilisateur, socInClient, socOutClient);
+                clientThreads.put(nomUtilisateur, ct);
                 ct.start();
             }
         } catch (Exception e) {
