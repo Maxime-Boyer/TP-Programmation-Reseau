@@ -1,6 +1,7 @@
 <!ELEMENT conversation (listeParticipants|message)*>
         <!ATTLIST conversation
-                nomConversation CDATA #REQUIRED>
+                nomConversation CDATA #REQUIRED
+                typeConversation CDATA #REQUIRED>
         <!ELEMENT listeParticipants (participant)*>
         <!ELEMENT participant (#PCDATA)>
         <!ELEMENT message (#PCDATA)>

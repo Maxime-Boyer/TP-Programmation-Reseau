@@ -284,6 +284,12 @@ public class XMLModifier {
 
                 String nomConversation = conversation.getNomConversation();
                 elemConversation.setAttribute("nomConversation", nomConversation);
+
+                String typeConversation = "privee";
+                if(conversation.isConversationGroupe())
+                    typeConversation = "groupe";
+                elemConversation.setAttribute("typeConversation", typeConversation);
+
                 ArrayList<Message> listeMessages = conversation.getListeMessages();
                 ArrayList<String> listeParticipants = conversation.getListeParticipants();
 
@@ -383,8 +389,6 @@ public class XMLModifier {
 
     }
 
-
-
     public Conversation getConversation(String nomConversation) {
 
         String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
@@ -459,6 +463,14 @@ public class XMLModifier {
                     Element doc = dom.getDocumentElement();
 
                     Conversation conversation = new Conversation(listFichier[i].getName().substring(0,listFichier[i].getName().length()-4));
+
+                    String typeConversation = doc.getAttributes().item(1).getTextContent();
+                    if(typeConversation.equals("groupe")){
+                        conversation.setConversationGroupe(true);
+                    }
+                    else{
+                        conversation.setConversationGroupe(false);
+                    }
 
                     NodeList listeParticipant = doc.getElementsByTagName("participant");
 

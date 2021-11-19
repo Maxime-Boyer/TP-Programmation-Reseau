@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class EchoServerMultiThreaded  {
 
-    //TODO : ajouter état connecté ou non à un client
-
     //key = nomUtilisateur
     static HashMap<String, ClientThread> clientThreads = new HashMap<>();
     /**
@@ -43,7 +41,6 @@ public class EchoServerMultiThreaded  {
             while (true) {
                 Socket clientSocket = listenSocket.accept();
                 System.out.println("Connexion from:" + clientSocket.getInetAddress());
-                //Buffer de lecture de la socket
                 BufferedReader socInClient = null;
                 socInClient = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
@@ -53,7 +50,6 @@ public class EchoServerMultiThreaded  {
                 socOutClient = new PrintStream(clientSocket.getOutputStream());
 
                 //On recupere le username de l'utilisateur
-                //provoque decalage et bug de l'affichage
                 String nomUtilisateur = socInClient.readLine();
 
                 ClientThread ct = new ClientThread(clientSocket, serveur, nomUtilisateur, socInClient, socOutClient);

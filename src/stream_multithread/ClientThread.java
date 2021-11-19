@@ -29,10 +29,6 @@ public class ClientThread extends Thread {
     private BufferedReader socIn;
     private PrintStream socOut;
 
-    // hash pour eviter les effets de bord (saisie utilisateur meme code par inadvertance)
-    public static String FIN_AFFICHAGE = "b5d3a7a3a9290e714f2b06ec21cf5af613a7eff7e1674269b3940848afb1bdf6";
-    public static String DECONNEXION = "1a6d88ecd34873cbc5a9cbc0dbc1d01ce9fe24af75f835714160b9d5735da9a5";
-
     private enum EtatsPossibles {
         MENU_INITIAL,
         MENU_LISTER_CONVERSATIONS,
@@ -159,7 +155,6 @@ public class ClientThread extends Thread {
         socOut.println("4 - deconnexion");
         socOut.println(" ");
         socOut.println("Entrez le numéro correspondant à l'action que vous souhaiter réaliser");
-        socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
     }
 
@@ -231,7 +226,6 @@ public class ClientThread extends Thread {
         socOut.println("2 - Rejoindre une conversation de groupe");
         socOut.println("3 - Parler à un utilisateur");
         socOut.println("4 - Retourner au menu initial");
-        socOut.println(FIN_AFFICHAGE);
         afficherMenu = false;
     }
 
@@ -262,7 +256,7 @@ public class ClientThread extends Thread {
                     etat = EtatsPossibles.MENU_CONVERSATION;
                     break;
                 case 4:
-                    socOut.println(DECONNEXION);
+                    //TODO deconnexion
                     break;
             }
         }
@@ -315,7 +309,6 @@ public class ClientThread extends Thread {
         while(!line.matches(".*[0-9a-zA-Z]+.*")){
             socOut.println(" ");
             socOut.println("Entrez le nom de la conversation que vous souhaitez créer:");
-            socOut.println(FIN_AFFICHAGE);
             line = socIn.readLine();
         }
 
@@ -362,7 +355,6 @@ public class ClientThread extends Thread {
         while(!line.matches(".*[0-9a-zA-Z]+.*")){
             socOut.println(" ");
             socOut.println("Entrez le nom de la conversation que vous souhaitez rejoindre:");
-            socOut.println(FIN_AFFICHAGE);
             line = socIn.readLine();
         }
 
@@ -413,7 +405,6 @@ public class ClientThread extends Thread {
         while(!line.matches(".*[0-9a-zA-Z]+.*")){
             socOut.println(" ");
             socOut.println("Entrez le nom de l'utilisateur à qui vous souhaitez parler:");
-            socOut.println(FIN_AFFICHAGE);
             line = socIn.readLine();
         }
 
@@ -514,7 +505,6 @@ public class ClientThread extends Thread {
             }
 
             // recuperation de l'entree utilisateur
-            socOut.println(FIN_AFFICHAGE);
             line = socIn.readLine();
 
             // si entree = exit sortir de la conversation et retourner à l'état initial

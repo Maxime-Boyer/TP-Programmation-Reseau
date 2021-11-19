@@ -83,6 +83,10 @@ public class Conversation {
         return conversationGroupe;
     }
 
+    public void setConversationGroupe(boolean conversationGroupe) {
+        this.conversationGroupe = conversationGroupe;
+    }
+
     /**
      * affiche la liste des utilisateurs participant à la conversation
      */
