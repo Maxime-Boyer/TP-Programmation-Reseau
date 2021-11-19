@@ -26,11 +26,10 @@ public class EchoClient {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         Socket echoSocket = null;
-
-        //String nomUtilisateur = null;
+        String nomUtilisateur = null;
 
         //Nombre d'arguments à 3, car le nom d'utilisateur est aussi passé en argument
         if (args.length != 2) {
@@ -46,10 +45,9 @@ public class EchoClient {
             stdIn = new BufferedReader(new InputStreamReader(System.in));
 
             //recupe le nom d'utilisateur
-            /*nomUtilisateur = args[2];
+            System.out.println("Entrez votre identifiant puis taper entrer");
+            nomUtilisateur=stdIn.readLine();
             socOut.println(nomUtilisateur);
-            System.out.println(nomUtilisateur);
-             */
 
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + args[0]);
@@ -60,9 +58,9 @@ public class EchoClient {
             System.exit(1);
         }
 
-        //ICI COMMENCE LES THREADS POUR L'ENVOIE ET LA RECEPTION DE MESSSAGE
-
-        //Thread d'envoie de messages à un ou plusieurs clients
+        /****************************************************************************/
+        /*      ICI COMMENCE LES THREADS POUR L'ENVOIE ET LA RECEPTION DE MESSSAGE  */
+        /****************************************************************************/
 
         Thread sendMessage = new Thread(new Runnable() {
 
@@ -80,8 +78,6 @@ public class EchoClient {
             }
 
         });
-
-        //Thread de lecture de messages reçuent
 
         Thread readMessage = new Thread(new Runnable() {
 
@@ -104,29 +100,9 @@ public class EchoClient {
         sendMessage.start();
         readMessage.start();
 
-        String line;
-        System.out.println("Entrez votre identifiant puis taper entrer");
-        while (true) {
-            //on affiche tout ce qui est renvoyé par le thread
-            String affichage = "";
+        // maintient en vie du thread pendant 1h
+        Thread.sleep(60*60*3600);
 
-            line=stdIn.readLine(); //point d'attente
-            socOut.println(line);
-
-
-            while(true){
-
-                affichage = socIn.readLine();
-
-                if(affichage.equals(ClientThread.FIN_AFFICHAGE) || affichage.equals(ClientThread.DECONNEXION))
-                    break;
-
-                System.out.println(affichage);
-            }
-
-            if(affichage.equals(ClientThread.DECONNEXION))
-                break;
-        }
         socOut.close();
         socIn.close();
         stdIn.close();
