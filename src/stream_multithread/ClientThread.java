@@ -487,6 +487,9 @@ public class ClientThread extends Thread {
             }
         }
 
+        //ajouter utilisateur
+        serveur.getListeConversations().get(indexConversation).ajouterUtilisateur(nomUtilisateur);
+
         //afficher la conversaition
         serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, 10);
 

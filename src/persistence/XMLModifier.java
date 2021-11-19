@@ -32,7 +32,6 @@ public class XMLModifier {
             if (listFichier[i].getName().equals(nomFichier)) {
 
                 fichierTrouve = true;
-                System.out.println("doc trouvé");
 
                 String file = "src/donneesServeur/" + nomFichier;
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -85,8 +84,6 @@ public class XMLModifier {
     public void creerDocListeParticipants(ArrayList<String> listeParticipants) {
         Document dom;
         Element e = null;
-
-        System.out.println("arrive ici");
 
         //Sinon on créer un nouveau document
         // instance of a DocumentBuilderFactory
@@ -190,9 +187,9 @@ public class XMLModifier {
                 }
                 break;
             }
-            if (!fichierTrouve) {
-                stockerConversation(conversation);
-            }
+        }
+        if (!fichierTrouve) {
+            stockerConversation(conversation);
         }
     }
 
@@ -249,9 +246,9 @@ public class XMLModifier {
                 }
                 break;
             }
-            if (!fichierTrouve) {
-                stockerConversation(conversation);
-            }
+        }
+        if (!fichierTrouve) {
+            stockerConversation(conversation);
         }
     }
 
@@ -386,6 +383,108 @@ public class XMLModifier {
 
     }
 
+
+
+    public Conversation getConversation(String nomConversation) {
+
+        String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
+
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/fichierXML/", false);
+        File[] listFichier = explorateurFichier.getNomDesFichiers();
+        boolean fichierTrouve = false;
+
+        Conversation conversation = null;
+
+        for(int i = 0; i < listFichier.length; i++) {
+            //Si le fichier existe déjà on ajoute des informations à la conversation : messages
+            if (listFichier[i].getName().equals(nomFichier)) {
+                Document dom;
+                // Make an  instance of the DocumentBuilderFactory
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                try {
+                    // use the factory to take an instance of the document builder
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    // parse using the builder to get the DOM mapping of the
+                    // XML file
+                    dom = db.parse("src/fichierXML/" + nomFichier);
+
+                    Element doc = dom.getDocumentElement();
+
+                    conversation = new Conversation(nomConversation);
+
+                    NodeList listeParticipant = doc.getElementsByTagName("participant");
+
+                    for(int j = 0; j < listeParticipant.getLength(); j++){
+                        conversation.ajouterUtilisateur(listeParticipant.item(j).getTextContent());
+                    }
+
+                    NodeList listeMessage = doc.getElementsByTagName("message");
+
+                    for(int j = 0; j < listeMessage.getLength(); j++){
+                        NamedNodeMap listeAttributs = listeMessage.item(j).getAttributes();
+                        conversation.ajouterMessage(listeAttributs.item(1).getTextContent() , listeMessage.item(j).getTextContent(), listeAttributs.item(0).getTextContent());
+                    }
+                } catch (ParserConfigurationException pce) {
+                    System.out.println(pce.getMessage());
+                } catch (SAXException se) {
+                    System.out.println(se.getMessage());
+                } catch (IOException ioe) {
+                    System.err.println(ioe.getMessage());
+                }
+            }
+        }
+        return conversation;
+    }
+
+    public ArrayList<Conversation> getAllConversation() {
+
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/fichierXML/", false);
+        File[] listFichier = explorateurFichier.getNomDesFichiers();
+        boolean fichierTrouve = false;
+        ArrayList<Conversation> listeConversation = new ArrayList<>();
+
+        for(int i = 0; i < listFichier.length; i++) {
+            //Si le fichier existe déjà on ajoute des informations à la conversation : messages
+            if (!listFichier[i].getName().equals("conversation.dtd")) {
+                Document dom;
+                // Make an  instance of the DocumentBuilderFactory
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                try {
+                    // use the factory to take an instance of the document builder
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    // parse using the builder to get the DOM mapping of the
+                    // XML file
+                    dom = db.parse("src/fichierXML/" + listFichier[i].getName());
+
+                    Element doc = dom.getDocumentElement();
+
+                    Conversation conversation = new Conversation(listFichier[i].getName().substring(0,listFichier[i].getName().length()-4));
+
+                    NodeList listeParticipant = doc.getElementsByTagName("participant");
+
+                    for(int j = 0; j < listeParticipant.getLength(); j++){
+                        conversation.ajouterUtilisateur(listeParticipant.item(j).getTextContent());
+                    }
+
+                    NodeList listeMessage = doc.getElementsByTagName("message");
+
+                    for(int j = 0; j < listeMessage.getLength(); j++){
+                        NamedNodeMap listeAttributs = listeMessage.item(j).getAttributes();
+                        conversation.ajouterMessage(listeAttributs.item(1).getTextContent() , listeMessage.item(j).getTextContent(), listeAttributs.item(0).getTextContent());
+                    }
+                    listeConversation.add(conversation);
+                } catch (ParserConfigurationException pce) {
+                    System.out.println(pce.getMessage());
+                } catch (SAXException se) {
+                    System.out.println(se.getMessage());
+                } catch (IOException ioe) {
+                    System.err.println(ioe.getMessage());
+                }
+            }
+        }
+        return listeConversation;
+    }
+
     public ArrayList<String> getListeParticipantsConversation(String nomConversation) {
 
         String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
@@ -427,6 +526,49 @@ public class XMLModifier {
             }
         }
 
+        return listeNomsParticipants;
+    }
+
+    public ArrayList<String> getListeParticipantsServeur() {
+
+        String nomFichier = "ListeDesParticipants.xml";
+
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/donneesServeur/", false);
+        File[] listFichier = explorateurFichier.getNomDesFichiers();
+        boolean fichierTrouve = false;
+
+        ArrayList<String> listeNomsParticipants = new ArrayList<>();
+
+        for(int i = 0; i < listFichier.length; i++) {
+            //Si le fichier existe déjà on ajoute des informations à la conversation : messages
+            if (listFichier[i].getName().equals(nomFichier)) {
+                Document dom;
+                // Make an  instance of the DocumentBuilderFactory
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                try {
+                    // use the factory to take an instance of the document builder
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    // parse using the builder to get the DOM mapping of the
+                    // XML file
+                    dom = db.parse("src/donneesServeur/" + nomFichier);
+
+                    Element doc = dom.getDocumentElement();
+
+                    NodeList listeParticipant = doc.getElementsByTagName("participant");
+
+                    for(int j = 0; j < listeParticipant.getLength(); j++){
+                        listeNomsParticipants.add(listeParticipant.item(j).getTextContent());
+                    }
+
+                } catch (ParserConfigurationException pce) {
+                    System.out.println(pce.getMessage());
+                } catch (SAXException se) {
+                    System.out.println(se.getMessage());
+                } catch (IOException ioe) {
+                    System.err.println(ioe.getMessage());
+                }
+            }
+        }
         return listeNomsParticipants;
     }
 
