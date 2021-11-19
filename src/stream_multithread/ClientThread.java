@@ -29,7 +29,7 @@ public class ClientThread extends Thread {
     private BufferedReader socIn;
     private PrintStream socOut;
 
-    // hash pur eviter les effets de bord (saisie utilisateur meme code par inadvertance)
+    // hash pour eviter les effets de bord (saisie utilisateur meme code par inadvertance)
     public static String FIN_AFFICHAGE = "b5d3a7a3a9290e714f2b06ec21cf5af613a7eff7e1674269b3940848afb1bdf6";
     public static String DECONNEXION = "1a6d88ecd34873cbc5a9cbc0dbc1d01ce9fe24af75f835714160b9d5735da9a5";
 
@@ -57,9 +57,16 @@ public class ClientThread extends Thread {
     }
 
     //Nathan
-    ClientThread(Socket s, Serveur serveur,String nomUtilisateur, BufferedReader socIn, PrintStream socOut) {
+    ClientThread(Socket s, Serveur serveur, String nomUtilisateur, BufferedReader socIn, PrintStream socOut) {
         this.clientSocket = s;
+        this.serveur = serveur;
         this.nomUtilisateur = nomUtilisateur;
+        this.socIn = socIn;
+        this.socOut = socOut;
+    }
+
+    ClientThread(Socket s, Serveur serveur, BufferedReader socIn, PrintStream socOut) {
+        this.clientSocket = s;
         this.serveur = serveur;
         this.socIn = socIn;
         this.socOut = socOut;
@@ -74,14 +81,12 @@ public class ClientThread extends Thread {
 
             // initialisation des canaux de communication
             /*
-            BufferedReader socIn = null;
-            socIn = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()));
+            BufferedReader socIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
             */
-            String line = socIn.readLine();
+            //String line = socIn.readLine();
 
-            // connection de l'utilisateur
+            //connection de l'utilisateur
             //nomUtilisateur = line;
             serveur.connecterUtilisateur(nomUtilisateur);
             System.out.println("\n"+serveur);
@@ -91,6 +96,7 @@ public class ClientThread extends Thread {
             //message utilisateur connexion reussie
             socOut.println("Vous êtes connecté avec succès");
 
+            String line = " ";
             while (line != null) {
                 if(afficherMenu){
                     switch (etat){
@@ -540,6 +546,7 @@ public class ClientThread extends Thread {
         }
     }
     private PrintStream getSocout() {return this.socOut; }
+    private String getnomUtilisateur() {return this.nomUtilisateur; }
 }
 
   

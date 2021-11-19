@@ -30,10 +30,10 @@ public class EchoClient {
 
         Socket echoSocket = null;
 
-        String nomUtilisateur = null;
+        //String nomUtilisateur = null;
 
         //Nombre d'arguments à 3, car le nom d'utilisateur est aussi passé en argument
-        if (args.length != 3) {
+        if (args.length != 2) {
             System.out.println("Usage: java EchoClient <EchoServer host> <EchoServer port>");
             System.exit(1);
         }
@@ -46,9 +46,10 @@ public class EchoClient {
             stdIn = new BufferedReader(new InputStreamReader(System.in));
 
             //recupe le nom d'utilisateur
-            nomUtilisateur = args[2];
+            /*nomUtilisateur = args[2];
             socOut.println(nomUtilisateur);
             System.out.println(nomUtilisateur);
+             */
 
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + args[0]);
@@ -104,15 +105,17 @@ public class EchoClient {
         readMessage.start();
 
         String line;
-        //System.out.println("Entrez votre identifiant puis taper entrer");
+        System.out.println("Entrez votre identifiant puis taper entrer");
         while (true) {
-            //on affiche tout ce qui est renvoye par le thread
+            //on affiche tout ce qui est renvoyé par le thread
             String affichage = "";
 
-            //line=stdIn.readLine(); //point d'attente
-            //socOut.println(line);
+            line=stdIn.readLine(); //point d'attente
+            socOut.println(line);
+
 
             while(true){
+
                 affichage = socIn.readLine();
 
                 if(affichage.equals(ClientThread.FIN_AFFICHAGE) || affichage.equals(ClientThread.DECONNEXION))
