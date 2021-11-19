@@ -1,0 +1,2 @@
+<!ELEMENT listeParticipants (participant)*>
+        <!ELEMENT participant (#PCDATA)>

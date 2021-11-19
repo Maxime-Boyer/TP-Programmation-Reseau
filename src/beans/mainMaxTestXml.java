@@ -55,5 +55,12 @@ public class mainMaxTestXml {
             System.out.println(listeStringParticipant.get(i));
         }
         System.out.println("********************************");
+
+        xmlModifier.stockerUtilisateurServeur("HelloAsso");
+        xmlModifier.stockerUtilisateurServeur("Martin");
+        xmlModifier.stockerUtilisateurServeur("Loris");
+        xmlModifier.stockerUtilisateurServeur("Mat");
+
+        System.out.println("Fin");
     }
 }
