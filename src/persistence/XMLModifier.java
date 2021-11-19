@@ -12,6 +12,7 @@ import org.xml.sax.*;
 import org.w3c.dom.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -19,8 +20,122 @@ import java.util.ArrayList;
 
 public class XMLModifier {
 
+    public void stockerUtilisateurServeur(String nomUtilisateur){
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/donneesServeur/", false);
+        File[] listFichier = explorateurFichier.getNomDesFichiers();
+        boolean fichierTrouve = false;
+
+
+        for(int i = 0; i < listFichier.length; i++) {
+            String nomFichier = "ListeDesParticipants.xml";
+            //Si le fichier existe déjà on ajoute des informations à la conversation : messages
+            if (listFichier[i].getName().equals(nomFichier)) {
+
+                fichierTrouve = true;
+                System.out.println("doc trouvé");
+
+                String file = "src/donneesServeur/" + nomFichier;
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                try {
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    Document doc = db.parse(file);
+                    // create instance of DOM
+                    Document dom = db.newDocument();
+
+                    Node elemListeParticipant = doc.getElementsByTagName("listeParticipants").item(0);
+
+                    Element e = doc.createElement("participant");
+                    e.setTextContent(nomUtilisateur);
+                    elemListeParticipant.appendChild(e);
+
+                    try {
+                        Transformer tr = TransformerFactory.newInstance().newTransformer();
+                        tr.setOutputProperty(OutputKeys.INDENT, "yes");
+                        tr.setOutputProperty(OutputKeys.METHOD, "xml");
+                        tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                        tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "listeParticipants.dtd");
+                        tr.setOutputProperty("{http://xml.Apache.org/xslt}indent-amount", "4");
+
+                        // send DOM to file
+                        tr.transform(new DOMSource(doc),
+                                new StreamResult(new FileOutputStream(file)));
+                    } catch (TransformerConfigurationException transformerConfigurationException) {
+                        transformerConfigurationException.printStackTrace();
+                    } catch (FileNotFoundException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                    } catch (TransformerException transformerException) {
+                        transformerException.printStackTrace();
+                    }
+                } catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (!fichierTrouve) {
+            ArrayList<String> nouveauParticipant = new ArrayList<>();
+            nouveauParticipant.add(nomUtilisateur);
+            creerDocListeParticipants(nouveauParticipant);
+        }
+    }
+
+    public void creerDocListeParticipants(ArrayList<String> listeParticipants) {
+        Document dom;
+        Element e = null;
+
+        System.out.println("arrive ici");
+
+        //Sinon on créer un nouveau document
+        // instance of a DocumentBuilderFactory
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            // use factory to get an instance of document builder
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            // create instance of DOM
+            dom = db.newDocument();
+
+            // create the root element
+            Element elemListeParticipants = dom.createElement("listeParticipants");
+
+            for (int i = 0; i < listeParticipants.size(); i++) {
+                // create data elements and place them under root
+                e = dom.createElement("participant");
+                e.setTextContent(listeParticipants.get(i));
+                //e.appendChild(dom.createTextNode(listeParticipants.get(i)));
+                elemListeParticipants.appendChild(e);
+            }
+
+            dom.appendChild(elemListeParticipants);
+
+            try {
+                Transformer tr = TransformerFactory.newInstance().newTransformer();
+                tr.setOutputProperty(OutputKeys.INDENT, "yes");
+                tr.setOutputProperty(OutputKeys.METHOD, "xml");
+                tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "listeParticipants.dtd");
+                tr.setOutputProperty("{http://xml.Apache.org/xslt}indent-amount", "4");
+
+                String nomFichier = "ListeDesParticipants.xml";
+
+                // send DOM to file
+                tr.transform(new DOMSource(dom),
+                        new StreamResult(new FileOutputStream("src/donneesServeur/" + nomFichier)));
+
+            } catch (TransformerException te) {
+                System.out.println(te.getMessage());
+            } catch (IOException ioe) {
+                System.out.println(ioe.getMessage());
+            }
+        } catch (ParserConfigurationException pce) {
+            System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+        }
+    }
+
     public void stockerMessage(Conversation conversation, Message message){
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/fichierXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -32,7 +147,7 @@ public class XMLModifier {
                 fichierTrouve = true;
                 try {
 
-                    String file = "src/FichierXML/" + nomFichier;
+                    String file = "src/fichierXML/" + nomFichier;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     Document doc = db.parse(file);
@@ -82,7 +197,7 @@ public class XMLModifier {
     }
 
     public void stockerNouveauParticipant(Conversation conversation, String nomUtilisateur){
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/fichierXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -94,7 +209,7 @@ public class XMLModifier {
                 fichierTrouve = true;
                 try {
 
-                    String file = "src/FichierXML/" + nomFichier;
+                    String file = "src/fichierXML/" + nomFichier;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     Document doc = db.parse(file);
@@ -144,7 +259,7 @@ public class XMLModifier {
         Document dom;
         Element e = null;
 
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/fichierXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -209,7 +324,7 @@ public class XMLModifier {
 
                     // send DOM to file
                     tr.transform(new DOMSource(dom),
-                            new StreamResult(new FileOutputStream("src/FichierXML/" + nomFichier + ".xml")));
+                            new StreamResult(new FileOutputStream("src/fichierXML/" + nomFichier + ".xml")));
 
                 } catch (TransformerException te) {
                     System.out.println(te.getMessage());
@@ -227,7 +342,7 @@ public class XMLModifier {
 
         String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
 
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/fichierXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -243,7 +358,7 @@ public class XMLModifier {
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     // parse using the builder to get the DOM mapping of the
                     // XML file
-                    dom = db.parse("src/FichierXML/" + nomFichier);
+                    dom = db.parse("src/fichierXML/" + nomFichier);
 
                     Element doc = dom.getDocumentElement();
 
@@ -275,7 +390,7 @@ public class XMLModifier {
 
         String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
 
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/fichierXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -292,7 +407,7 @@ public class XMLModifier {
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     // parse using the builder to get the DOM mapping of the
                     // XML file
-                    dom = db.parse("src/FichierXML/" + nomFichier);
+                    dom = db.parse("src/fichierXML/" + nomFichier);
 
                     Element doc = dom.getDocumentElement();
 
@@ -319,7 +434,7 @@ public class XMLModifier {
 
         String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
 
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/FichierXML/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/fichierXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -337,7 +452,7 @@ public class XMLModifier {
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     // parse using the builder to get the DOM mapping of the
                     // XML file
-                    dom = db.parse("src/FichierXML/" + nomFichier);
+                    dom = db.parse("src/fichierXML/" + nomFichier);
 
                     Element doc = dom.getDocumentElement();
 
