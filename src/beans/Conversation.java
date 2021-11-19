@@ -1,6 +1,9 @@
 package beans;
 
+import persistence.XMLModifier;
+
 import java.io.PrintStream;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Conversation {
@@ -8,6 +11,7 @@ public class Conversation {
     private String nomConversation;
     private ArrayList<Message> listeMessages;
     private ArrayList<String> listeParticipants;
+    private XMLModifier xmlModifier = new XMLModifier();
     private boolean conversationGroupe;
 
     /**
@@ -42,6 +46,7 @@ public class Conversation {
         // ajout des 2 seuls utilisateurs
         ajouterUtilisateur(nomUtilisateur);
         ajouterUtilisateur(nomDuCorrespondant);
+
     }
 
     /**
@@ -93,7 +98,17 @@ public class Conversation {
      * @param nomUtilisateur: le nom de l'utilisateur à ajouter comme participant à la conversation
      */
     public void ajouterUtilisateur(String nomUtilisateur){
-        listeParticipants.add(nomUtilisateur);
+        boolean utilisateurTrouve = false;
+        for(int i = 0; i < listeParticipants.size(); i++){
+            if(listeParticipants.get(i).equals(nomUtilisateur)){
+                utilisateurTrouve = true;
+                break;
+            }
+        }
+        if(!utilisateurTrouve) {
+            listeParticipants.add(nomUtilisateur);
+            xmlModifier.stockerNouveauParticipant(this, nomUtilisateur);
+        }
     }
 
     /**
@@ -104,6 +119,24 @@ public class Conversation {
     public void ajouterMessage(String nomUtilisateur, String corpsMessage){
         Message message = new Message(nomUtilisateur, corpsMessage);
         listeMessages.add(message);
+        xmlModifier.stockerMessage(this, message);
+    }
+
+    /**
+     * ajoute un message à la conversation
+     * @param nomUtilisateur: l'auteur du message
+     * @param corpsMessage: le message écris par l'auteur
+     * @param dateEnvoi: date à laquelle a été envoyé le message
+     */
+    public void ajouterMessage(String nomUtilisateur, String corpsMessage, String dateEnvoi){
+        Message message = null;
+        try {
+            message = new Message(nomUtilisateur, corpsMessage, dateEnvoi);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        listeMessages.add(message);
+        xmlModifier.stockerMessage(this, message);
     }
 
     /**
