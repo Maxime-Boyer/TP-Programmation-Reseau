@@ -24,6 +24,7 @@ public class ClientThread extends Thread {
     private String nomConversationActuelle;
     private int tailleConversationActuelle;
     private boolean afficherMenu;
+    private boolean utilisateurConnecte;
 
     //Nathan
     private BufferedReader socIn;
@@ -45,27 +46,15 @@ public class ClientThread extends Thread {
      * @param s: le socket créé par le ServerMultiThreaded affecté à un client
      * @param serveur
      */
-    ClientThread(Socket s, Serveur serveur) {
-        this.clientSocket = s;
-        this.serveur = serveur;
-        nomConversationActuelle = "";
-        tailleConversationActuelle = 0;
-    }
-
-    //Nathan
     ClientThread(Socket s, Serveur serveur, String nomUtilisateur, BufferedReader socIn, PrintStream socOut) {
         this.clientSocket = s;
         this.serveur = serveur;
         this.nomUtilisateur = nomUtilisateur;
         this.socIn = socIn;
         this.socOut = socOut;
-    }
-
-    ClientThread(Socket s, Serveur serveur, BufferedReader socIn, PrintStream socOut) {
-        this.clientSocket = s;
-        this.serveur = serveur;
-        this.socIn = socIn;
-        this.socOut = socOut;
+        this.nomConversationActuelle = "";
+        this.tailleConversationActuelle = 0;
+        this.utilisateurConnecte = true;
     }
 
     /**
@@ -84,45 +73,59 @@ public class ClientThread extends Thread {
             socOut.println("Vous êtes connecté avec succès");
 
             String line = " ";
-            while (line != null) {
-                if(afficherMenu){
-                    if(etat != EtatsPossibles.PARLER_DANS_CONVERSATION){
-                        nomConversationActuelle = "";
-                        tailleConversationActuelle = 0;
+            while (true) {
+
+                if(utilisateurConnecte){
+                    if(afficherMenu){
+                        if(etat != EtatsPossibles.PARLER_DANS_CONVERSATION){
+                            nomConversationActuelle = "";
+                            tailleConversationActuelle = 0;
+                        }
+                        switch (etat){
+                            case MENU_INITIAL:
+                                afficherMenuInitial();
+                                gereMenuInitial();
+                                break;
+                            case MENU_LISTER_CONVERSATIONS:
+                                afficherMenuListerConversations();
+                                retourEtatInitial();
+                                break;
+                            case MENU_LISTER_UTILISATEURS:
+                                afficherMenuListerUtilisateurs();
+                                retourEtatInitial();
+                                break;
+                            case MENU_CONVERSATION:
+                                afficherMenuConversation();
+                                gereMenuConversation();
+                                break;
+                            case CREER_CONVERSATION_GROUPE:
+                                creerConversation();
+                                break;
+                            case REJOINDRE_CONVERSATION_GROUPE:
+                                rejoindreConversation();
+                                break;
+                            case CONTACTER_UTILISATEUR:
+                                rejoindreConversationUtilisateur();
+                                break;
+                            case PARLER_DANS_CONVERSATION:
+                                parlerDansConversation();
+                                break;
+                        }
                     }
-                    switch (etat){
-                        case MENU_INITIAL:
-                            afficherMenuInitial(socOut);
-                            gereMenuInitial(socOut, socIn);
-                            break;
-                        case MENU_LISTER_CONVERSATIONS:
-                            afficherMenuListerConversations(socOut);
-                            retourEtatInitial();
-                            break;
-                        case MENU_LISTER_UTILISATEURS:
-                            afficherMenuListerUtilisateurs(socOut);
-                            retourEtatInitial();
-                            break;
-                        case MENU_CONVERSATION:
-                            afficherMenuConversation(socOut);
-                            gereMenuConversation(socIn);
-                            break;
-                        case CREER_CONVERSATION_GROUPE:
-                            creerConversation(socOut, socIn);
-                            break;
-                        case REJOINDRE_CONVERSATION_GROUPE:
-                            rejoindreConversation(socOut, socIn);
-                            break;
-                        case CONTACTER_UTILISATEUR:
-                            rejoindreConversationUtilisateur(socOut, socIn);
-                            break;
-                        case PARLER_DANS_CONVERSATION:
-                            parlerDansConversation(socOut, socIn);
-                            break;
+                }
+
+                if(!utilisateurConnecte) {
+                    socOut.println(" ");
+                    socOut.println("Pour vous reconnecter, veuillez entrer votre identifiant svp: ");
+                    line = socIn.readLine();
+
+                    if(line.equals(nomUtilisateur)){
+                        System.out.println(nomUtilisateur+" est connecté au serveur.");
+                        utilisateurConnecte = true;
                     }
                 }
             }
-            socOut.println("Deconnexion réussie.");
+
         } catch (Exception e) {
             System.err.println("Error in EchoServer:" + e);
         }
@@ -139,9 +142,8 @@ public class ClientThread extends Thread {
     /**
      * affiche le menu initial, c'est à dire le menu que voit l'utilisateur lorsqu'il est connecté mais qu'il
      * n'a commencé aucune action
-     * @param socOut: le canal de communication sortant qui permet de parler au client
      */
-    public void afficherMenuInitial(PrintStream socOut){
+    public void afficherMenuInitial(){
         socOut.println(" ");
         socOut.println("Menu initial:");
         socOut.println("1 - lister les conversations");
@@ -155,9 +157,8 @@ public class ClientThread extends Thread {
 
     /**
      * Méthode gérant l'affichage de la liste des conversations
-     * @param socOut: permet de transmettre des informations au client
      */
-    public void afficherMenuListerConversations(PrintStream socOut){
+    public void afficherMenuListerConversations(){
         ArrayList<Conversation> listeConversation = serveur.getListeConversations();
         socOut.println(" ");
         socOut.println("Conversations de groupe:");
@@ -194,9 +195,8 @@ public class ClientThread extends Thread {
 
     /**
      * Méthode gérant l'affichage de la liste des utilisateurs
-     * @param socOut: permet de transmettre des informations au client
      */
-    public void afficherMenuListerUtilisateurs(PrintStream socOut){
+    public void afficherMenuListerUtilisateurs(){
         ArrayList<String> listeUtilisateur = serveur.getListeNomsUtilisateurs();
         socOut.println(" ");
         socOut.println("Ordre alphabétique des utilisateurs");
@@ -212,9 +212,8 @@ public class ClientThread extends Thread {
 
     /**
      * Affiche le menu permettant de communiquer sur le forum
-     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
      */
-    public void afficherMenuConversation(PrintStream socOut){
+    public void afficherMenuConversation(){
         socOut.println(" ");
         socOut.println("Que souhaitez-vous faire ?");
         socOut.println("1 - Créer une conversation de groupe");
@@ -228,12 +227,15 @@ public class ClientThread extends Thread {
         return nomUtilisateur;
     }
 
+    public String getNomConversationActuelle() {
+        return nomConversationActuelle;
+    }
+
     /**
      * Récupère la saisie utilisateur suite au menu initial et redirige vers l'état demandé par l'utilisateur
-     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void gereMenuInitial(PrintStream socOut, BufferedReader socIn) throws IOException {
+    public void gereMenuInitial() throws IOException {
 
         // si entree non prise en charge, affiche à nouveau le meme menu
         String line = socIn.readLine();
@@ -251,7 +253,9 @@ public class ClientThread extends Thread {
                     etat = EtatsPossibles.MENU_CONVERSATION;
                     break;
                 case 4:
-                    //TODO deconnexion
+                    System.out.println(nomUtilisateur+" a quitté le serveur.");
+                    socOut.println("Deconnexion réussie.");
+                    utilisateurConnecte = false;
                     break;
             }
         }
@@ -260,10 +264,9 @@ public class ClientThread extends Thread {
 
     /**
      * Récupère la saisie utilisateur suite au menu conversation et redirige vers l'état demandé par l'utilisateur
-     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void gereMenuConversation(BufferedReader socIn) throws IOException{
+    public void gereMenuConversation() throws IOException{
 
         // si entree non prise en charge, affiche à nouveau le meme menu
         String line = socIn.readLine();
@@ -293,11 +296,9 @@ public class ClientThread extends Thread {
      * Protections:
      *      si la conversation existe deja, message avertissement et envoie utilisateur vers le menu précédent
      *      si le nom entré ne possede pas un seul caractere ou chiffre, on lui redemande de saisir le nom
-     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
-     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void creerConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
+    public void creerConversation() throws IOException {
 
         String line = "";
         // tant que l'entree utilisateur ne contient pas un seul caractere lisible, on lui demande une entree
@@ -339,11 +340,9 @@ public class ClientThread extends Thread {
      * Protections:
      *      si la conversation n'existe pas, message avertissement et envoie utilisateur vers le menu précédent
      *      si le nom entré ne possede pas un seul caractere ou chiffre, on lui redemande de saisir le nom
-     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
-     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void rejoindreConversation(PrintStream socOut, BufferedReader socIn) throws IOException {
+    public void rejoindreConversation() throws IOException {
 
         String line = "";
         // tant que l'entree utilisateur ne contient pas un seul caractere lisible, on lui demande une entree
@@ -389,11 +388,9 @@ public class ClientThread extends Thread {
      *      Si l'utilisateur n'existe pas, avertissement et retour au menu précédent
      *      si le nom entré ne possede pas un seul caractere ou chiffre, on lui redemande de saisir le nom
      *      si la conversation n'existe pas, elle est créée et l'utilisateur est averti
-     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
-     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void rejoindreConversationUtilisateur(PrintStream socOut, BufferedReader socIn) throws IOException {
+    public void rejoindreConversationUtilisateur() throws IOException {
 
         String line = "";
         // tant que l'entree utilisateur ne contient pas un seul caractere lisible, on lui demande une entree
@@ -457,11 +454,9 @@ public class ClientThread extends Thread {
 
     /**
      * Methode permettant à un utilisateur de parler sur la conversation
-     * @param socOut: le canal de communication sortant permettant de communiquer avec le client
-     * @param socIn: le canal de communication entrant permettant de recuperer les saisies client
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void parlerDansConversation(PrintStream socOut, BufferedReader socIn) throws IOException{
+    public void parlerDansConversation() throws IOException{
 
         socOut.println(" ");
         socOut.println("---     Conversation "+nomConversationActuelle+"     ---");
@@ -523,7 +518,7 @@ public class ClientThread extends Thread {
                 //Choix du ou des clients à qui on envoie le message
                 for (Map.Entry<String, ClientThread> client : EchoServerMultiThreaded.clientThreads.entrySet()) {
                     for(String participant : serveur.getListeConversations().get(indexConversation).getListeParticipants()) {
-                        if((client.getKey().equals(participant)) && !(client.getKey() == nomUtilisateur)) {
+                        if((client.getKey().equals(participant)) && !(client.getKey() == nomUtilisateur) && client.getValue().getNomConversationActuelle().equals(nomConversationActuelle)) {
                             client.getValue().refreshConversation();
                         }
                     }
@@ -531,8 +526,6 @@ public class ClientThread extends Thread {
             }
         }
     }
-    private PrintStream getSocout() {return this.socOut; }
-    private String getnomUtilisateur() {return this.nomUtilisateur; }
 
     // TODO Javadoc
     public void refreshConversation(){
