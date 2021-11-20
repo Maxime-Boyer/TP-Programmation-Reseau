@@ -40,13 +40,13 @@ public class Serveur {
      * Méthode permettant d'ajouter une conversation à la liste des conversations
      * @param nomConversation
      */
-    public void ajouterConversations(String nomConversation){
+    public void ajouterConversations(String nomConversation, boolean isGroupe){
         Conversation conversation = new Conversation(nomConversation);
+        conversation.setConversationGroupe(isGroupe);
         listeConversations.add(conversation);
         xmlModifier.stockerConversation(conversation);
     }
 
-    //TODO : ajouter la notion d'utilisateur connecté ou non pour afficher que les utilisateurs : tous et aussi que les connecter
     /**
      * Méthode permettant d'ajouter un utilisateur à la liste des utilisateurs
      * @param nomUtilisateur

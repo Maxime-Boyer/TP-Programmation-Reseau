@@ -86,8 +86,10 @@ public class ClientThread extends Thread {
             String line = " ";
             while (line != null) {
                 if(afficherMenu){
-                    nomConversationActuelle = "";
-                    tailleConversationActuelle = 0;
+                    if(etat != EtatsPossibles.PARLER_DANS_CONVERSATION){
+                        nomConversationActuelle = "";
+                        tailleConversationActuelle = 0;
+                    }
                     switch (etat){
                         case MENU_INITIAL:
                             afficherMenuInitial(socOut);
@@ -322,7 +324,7 @@ public class ClientThread extends Thread {
 
         if(!conversationExiste){
             // si elle n'existe pas, on la crée
-            serveur.ajouterConversations(line);
+            serveur.ajouterConversations(line, true);
             socOut.println("Conversation '"+line+"' créée.");
             nomConversationActuelle = line;
             tailleConversationActuelle = 0;
@@ -436,8 +438,7 @@ public class ClientThread extends Thread {
 
             if(!conversationExiste){
                 // si elle n'existe pas, on crée la conversation
-                serveur.ajouterConversations(nomComversation);
-                serveur.getListeConversations().get(serveur.getListeConversations().size()-1).setConversationGroupe(false);
+                serveur.ajouterConversations(nomComversation, false);
                 serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(nomUtilisateur);
                 serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(line);
                 nomConversationActuelle = nomComversation;
