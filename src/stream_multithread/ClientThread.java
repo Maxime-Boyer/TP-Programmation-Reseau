@@ -358,8 +358,17 @@ public class ClientThread extends Thread {
                 nomConversationActuelle = line;
                 tailleConversationActuelle = conversation.getListeMessages().size();
 
-                // ajout du client dans cette conversation
-                conversation.ajouterUtilisateur(nomUtilisateur);
+                // ajout du client dans cette conversation si il n'existe pas
+                boolean utilisateurTrouve = false;
+                for(int j = 0; j < conversation.getListeParticipants().size(); j++){
+                    if(conversation.getListeParticipants().get(j).equals(nomUtilisateur)){
+                        utilisateurTrouve = true;
+                    }
+                }
+                if(!utilisateurTrouve){
+                    System.out.println("ajout utilisateur " + nomUtilisateur);
+                    conversation.ajouterUtilisateur(nomUtilisateur);
+                }
 
                 socOut.println("Connexion à la conversation '"+line+"'...");
                 etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
@@ -450,15 +459,15 @@ public class ClientThread extends Thread {
      * Methode permettant à un utilisateur de parler sur la conversation
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
      */
-    public void parlerDansConversation() throws IOException{
+    public void parlerDansConversation() throws IOException {
 
         socOut.println(" ");
-        socOut.println("---     Conversation "+nomConversationActuelle+"     ---");
+        socOut.println("---     Conversation " + nomConversationActuelle + "     ---");
 
         // determiner la conversation dans laquelle se trouve l'utilisateur
         int indexConversation = 0;
-        for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            if(serveur.getListeConversations().get(i).getNomConversation().equals(nomConversationActuelle)){
+        for (int i = 0; i < serveur.getListeConversations().size(); i++) {
+            if (serveur.getListeConversations().get(i).getNomConversation().equals(nomConversationActuelle)) {
                 indexConversation = i;
                 break;
             }
@@ -467,8 +476,20 @@ public class ClientThread extends Thread {
         tailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
 
         //ajouter utilisateur si conv groupe
-        if(serveur.getListeConversations().get(indexConversation).isConversationGroupe())
-            serveur.getListeConversations().get(indexConversation).ajouterUtilisateur(nomUtilisateur);
+        Conversation conversation = serveur.getListeConversations().get(indexConversation);
+        if (conversation.isConversationGroupe()){
+            boolean utilisateurTrouve = false;
+            for (int j = 0; j < conversation.getListeParticipants().size(); j++) {
+                if (conversation.getListeParticipants().get(j).equals(nomUtilisateur)) {
+                    utilisateurTrouve = true;
+                }
+
+                if (!utilisateurTrouve) {
+                    System.out.println("ajout utilisateur " + nomUtilisateur);
+                    conversation.ajouterUtilisateur(nomUtilisateur);
+                }
+            }
+        }
 
         //afficher la conversaition
         serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, 10);
