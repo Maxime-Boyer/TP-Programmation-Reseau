@@ -123,7 +123,7 @@ public class Conversation {
     /**
      * Liste les N derniers messages de la conversation et les affiche
      */
-    public void afficherNMessages(PrintStream socOut, int n){
+    public void afficherNMessages(PrintStream socOut, int n, String nomUtilisateur){
 
         Message message;
         int debutBoucle = 0;
@@ -135,7 +135,13 @@ public class Conversation {
         for(int i = debutBoucle; i < listeMessages.size(); i++){
             message = listeMessages.get(i);
             socOut.println(" ");
-            socOut.println(message.getNomAuteur()+" - "+message.getDateEnvoi());
+            String nomAuteur = "";
+            if(message.getNomAuteur().equals(nomUtilisateur)){
+                nomAuteur = "Vous";
+            }else {
+                nomAuteur = message.getNomAuteur();
+            }
+            socOut.println(nomAuteur+" - "+message.getDateEnvoi());
             socOut.println(message.getCorpsMessage());
         }
     }

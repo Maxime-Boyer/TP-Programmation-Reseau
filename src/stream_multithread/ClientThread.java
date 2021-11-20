@@ -492,7 +492,7 @@ public class ClientThread extends Thread {
         }
 
         //afficher la conversaition
-        serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, 10);
+        serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, 10, nomUtilisateur);
 
         // afficher les consignes à l'utilisateur
         socOut.println(" ");
@@ -523,7 +523,7 @@ public class ClientThread extends Thread {
                 socOut.println(" ");
                 socOut.println("---     Conversation "+nomConversationActuelle+"     ---");
                 tailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
-                serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, tailleConversationActuelle);
+                serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, tailleConversationActuelle, nomUtilisateur);
             }
             // sinon envoyer un message sur la conversation
             else{
@@ -559,7 +559,7 @@ public class ClientThread extends Thread {
         int nouvelleTailleConversationActuelle = 0;
         nouvelleTailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
         if(nouvelleTailleConversationActuelle > tailleConversationActuelle){
-            serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, nouvelleTailleConversationActuelle-tailleConversationActuelle);
+            serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, nouvelleTailleConversationActuelle-tailleConversationActuelle, nomUtilisateur);
             tailleConversationActuelle = nouvelleTailleConversationActuelle;
         }
     }
