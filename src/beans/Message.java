@@ -24,6 +24,13 @@ public class Message {
         this.dateEnvoi = new Date(System.currentTimeMillis());
     }
 
+    /**
+     * Message textuel envoyé par un utilisateur dans une conversation
+     * @param nomAuteur: le nom de l'auteur du message
+     * @param corpsMessage: le message écrit par l'auteur
+     * @param stringDateEnvoi: la date du message
+     * @throws ParseException
+     */
     public Message(String nomAuteur, String corpsMessage, String stringDateEnvoi) throws ParseException {
         this.nomAuteur = nomAuteur;
         this.corpsMessage = corpsMessage;

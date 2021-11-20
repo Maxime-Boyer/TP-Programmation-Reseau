@@ -1,11 +1,6 @@
 package beans;
 
 import persistence.XMLModifier;
-import stream_multithread.ClientThread;
-import stream_multithread.EchoServerMultiThreaded;
-
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class Serveur {

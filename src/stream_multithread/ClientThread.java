@@ -1,9 +1,4 @@
-package stream_multithread; /***
- * ClientThread
- * Example of a TCP server
- * Date: 14/12/08
- * Authors:
- */
+package stream_multithread;
 
 import beans.Conversation;
 import beans.Serveur;
@@ -43,8 +38,11 @@ public class ClientThread extends Thread {
 
     /**
      *
-     * @param s: le socket créé par le ServerMultiThreaded affecté à un client
-     * @param serveur
+     * @param s: la socket init sur le serveur
+     * @param serveur: le serveur sur lequel tourne le chat
+     * @param nomUtilisateur: le nom de l'utilisateur auquel appartient le thread
+     * @param socIn: le canal d'entree des saisies utilisateur
+     * @param socOut: le canal de sortie permettznt d'afficher du texte sur le terminal de l'utilisateur
      */
     ClientThread(Socket s, Serveur serveur, String nomUtilisateur, BufferedReader socIn, PrintStream socOut) {
         this.clientSocket = s;
@@ -65,7 +63,7 @@ public class ClientThread extends Thread {
         try {
 
             //connection de l'utilisateur
-            serveur.connecterUtilisateur(nomUtilisateur);       // TODO ??
+            serveur.connecterUtilisateur(nomUtilisateur);
             etat = EtatsPossibles.MENU_INITIAL;
             afficherMenu = true;
 
@@ -221,10 +219,6 @@ public class ClientThread extends Thread {
         socOut.println("3 - Parler à un utilisateur");
         socOut.println("4 - Retourner au menu initial");
         afficherMenu = false;
-    }
-
-    public String getNomUtilisateur() {
-        return nomUtilisateur;
     }
 
     public String getNomConversationActuelle() {
@@ -527,7 +521,9 @@ public class ClientThread extends Thread {
         }
     }
 
-    // TODO Javadoc
+    /**
+     * Affiche les derniers messages non lus de la conversation
+     */
     public void refreshConversation(){
 
         int indexConversation = 0;

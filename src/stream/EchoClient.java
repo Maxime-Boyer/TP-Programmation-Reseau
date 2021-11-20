@@ -1,19 +1,8 @@
-/***
- * EchoClient
- * Example of a TCP client
- * Date: 10/01/04
- * Authors:
- */
+
 package stream;
 
-import stream_multithread.ClientThread;
-import toDelete.Client;
-
-import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.net.*;
-import java.sql.SQLOutput;
-
 
 public class EchoClient {
 
@@ -23,8 +12,7 @@ public class EchoClient {
     /**
      * Méthode main
      * Accepte une connection, reçoit un message du client et ensuite envoi un echo au client
-     * @param args
-     * @throws IOException
+     * @param args: les entrees de la config
      */
     public static void main(String[] args) throws IOException, InterruptedException {
 

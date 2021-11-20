@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class mainMaxTestXml {
 
+    //TODO maxime: si ok, delete cette classe
+
     public static void main(String args[]){
         Conversation conversation = new Conversation("RESTO en club");
         conversation.ajouterUtilisateur(new Utilisateur("Franck").getNomUtilisateur());

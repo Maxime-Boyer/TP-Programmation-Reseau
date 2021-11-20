@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 public class XMLModifier {
 
+    //TODO Maxime: Javadoc des methodes de cette classe
+
     public void stockerUtilisateurServeur(String nomUtilisateur){
         ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/donneesServeur/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();

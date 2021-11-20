@@ -5,6 +5,8 @@ import java.net.*;
 
 public class Client {
 
+    // TODO: si ok, delete ce package
+
     private MulticastSocket socket;
 
     public Client(String ip, int port) throws IOException {

@@ -1,29 +1,18 @@
-package stream_multithread; /***
- * EchoServer
- * Example of a TCP server
- * Date: 10/01/04
- * Authors:
- */
-
-import beans.Conversation;
+package stream_multithread;
 import beans.Serveur;
-import persistence.XMLModifier;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class EchoServerMultiThreaded  {
 
     //key = nomUtilisateur
     static HashMap<String, ClientThread> clientThreads = new HashMap<>();
 
-    /** TODO Javadoc
-     * main method
+    /**
+     * main du serveur: permet la synchro de l'ensemble des threads utilisateur
      * @param args port
-     *
      **/
     public static void main(String args[]){
 
