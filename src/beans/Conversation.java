@@ -27,29 +27,6 @@ public class Conversation {
     }
 
     /**
-     * Crée une conversation privée entre 2 utilisateurs. L'objet contient
-     * la liste des messages envoyés sur la conversation et les deux auteurs.
-     * La clef est générée par "nomOrdreAlphabetique1 et nomOrdreAlphabetique2"
-     * @param nomUtilisateur: le nom de l'utilisateur qui crée la conversatoion
-     * @param nomDuCorrespondant: le nom de l'utilisateur avec qui il correspond
-     */
-    public Conversation(String nomUtilisateur, String nomDuCorrespondant) {
-
-        this("");
-
-        //determination de la clef de la conversation par ordre lexicographique
-        this.nomConversation = determinerNomConversationAvec2NomsUtilisateurs(nomUtilisateur, nomDuCorrespondant);
-
-        // creation de la conversation
-        this.conversationGroupe = false;
-
-        // ajout des 2 seuls utilisateurs
-        ajouterUtilisateur(nomUtilisateur);
-        ajouterUtilisateur(nomDuCorrespondant);
-
-    }
-
-    /**
      * determine la nom d'une conversation grace à 2 noms selon l'ordre lexicographique
      * @param nom1: le nom d'un utilisateur
      * @param nom2: le nom d'un autre utilisateur

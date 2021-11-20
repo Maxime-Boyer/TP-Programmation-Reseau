@@ -52,7 +52,6 @@ public class Serveur {
      * @param nomUtilisateur
      */
     public void connecterUtilisateur(String nomUtilisateur){
-        System.out.println("\nConnexion de l'utilisateur: " + nomUtilisateur);
         if (!listeNomsUtilisateurs.contains(nomUtilisateur)) {
             listeNomsUtilisateurs.add(nomUtilisateur);
             xmlModifier.stockerUtilisateurServeur(nomUtilisateur);

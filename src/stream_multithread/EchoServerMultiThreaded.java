@@ -19,7 +19,8 @@ public class EchoServerMultiThreaded  {
 
     //key = nomUtilisateur
     static HashMap<String, ClientThread> clientThreads = new HashMap<>();
-    /**
+
+    /** TODO Javadoc
      * main method
      * @param args port
      *
@@ -29,18 +30,17 @@ public class EchoServerMultiThreaded  {
         ServerSocket listenSocket;
 
         if (args.length != 1) {
-            System.out.println("Usage: java EchoServer <EchoServer port>");
+            System.out.println("Utilisation: démarrer une config avec le port du serveur en entrée");
             System.exit(1);
         }
         try {
             listenSocket = new ServerSocket(Integer.parseInt(args[0])); //port
             Serveur serveur = new Serveur(); //creer le serveur
-            System.out.println("Server ready...");
+            System.out.println("Serveur prêt...\n");
 
             // ecoute de nouvelles connexion, creation d'un nouveau thread en cas de connexion
             while (true) {
                 Socket clientSocket = listenSocket.accept();
-                System.out.println("Connexion from:" + clientSocket.getInetAddress());
                 BufferedReader socInClient = null;
                 socInClient = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
@@ -51,6 +51,7 @@ public class EchoServerMultiThreaded  {
 
                 //On recupere le username de l'utilisateur
                 String nomUtilisateur = socInClient.readLine();
+                System.out.println(nomUtilisateur+" est connecté au serveur.");
 
                 ClientThread ct = new ClientThread(clientSocket, serveur, nomUtilisateur, socInClient, socOutClient);
                 clientThreads.put(nomUtilisateur, ct);

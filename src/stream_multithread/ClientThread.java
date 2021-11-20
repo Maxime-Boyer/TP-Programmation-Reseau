@@ -85,7 +85,6 @@ public class ClientThread extends Thread {
             //connection de l'utilisateur
             //nomUtilisateur = line;
             serveur.connecterUtilisateur(nomUtilisateur);
-            System.out.println("\n"+serveur);
             etat = EtatsPossibles.MENU_INITIAL;
             afficherMenu = true;
 
@@ -444,6 +443,9 @@ public class ClientThread extends Thread {
             if(!conversationExiste){
                 // si elle n'existe pas, on crée la conversation
                 serveur.ajouterConversations(nomComversation);
+                serveur.getListeConversations().get(serveur.getListeConversations().size()-1).setConversationGroupe(false);
+                serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(nomUtilisateur);
+                serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(line);
                 socOut.println("Création de la conversation avec '"+line+"'. Vous pouvez désormais communiquer avec "+line+".");
                 etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
             }
@@ -464,8 +466,6 @@ public class ClientThread extends Thread {
      */
     public void parlerDansConversation(PrintStream socOut, BufferedReader socIn) throws IOException{
 
-        // TODO Synchro
-
         socOut.println(" ");
         socOut.println("---     Conversation "+nomConversationActuelle+"     ---");
 
@@ -478,8 +478,9 @@ public class ClientThread extends Thread {
             }
         }
 
-        //ajouter utilisateur
-        serveur.getListeConversations().get(indexConversation).ajouterUtilisateur(nomUtilisateur);
+        //ajouter utilisateur si conv groupe
+        if(serveur.getListeConversations().get(indexConversation).isConversationGroupe())
+            serveur.getListeConversations().get(indexConversation).ajouterUtilisateur(nomUtilisateur);
 
         //afficher la conversaition
         serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, 10);
