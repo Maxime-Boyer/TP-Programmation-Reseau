@@ -462,7 +462,7 @@ public class XMLModifier {
 
                     Element doc = dom.getDocumentElement();
 
-                    Conversation conversation = new Conversation(listFichier[i].getName().substring(0,listFichier[i].getName().length()-4));
+                    Conversation conversation = new Conversation(doc.getAttributes().item(0).getTextContent());
 
                     String typeConversation = doc.getAttributes().item(1).getTextContent();
                     if(typeConversation.equals("groupe")){

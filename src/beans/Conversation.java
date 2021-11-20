@@ -36,10 +36,10 @@ public class Conversation {
     public static String determinerNomConversationAvec2NomsUtilisateurs(String nom1, String nom2){
         String nomConversation = "";
         if(nom1.compareTo(nom2) < 0){
-            nomConversation = nom1 + " et " + nom2;
+            nomConversation = nom1 + "_" + nom2;
         }
         else{
-            nomConversation = nom2 + " et " + nom1;
+            nomConversation = nom2 + "_" + nom1;
         }
         return nomConversation;
     }

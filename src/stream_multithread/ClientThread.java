@@ -75,16 +75,8 @@ public class ClientThread extends Thread {
 
         try {
 
-            // initialisation des canaux de communication
-            /*
-            BufferedReader socIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
-            */
-            //String line = socIn.readLine();
-
             //connection de l'utilisateur
-            //nomUtilisateur = line;
-            serveur.connecterUtilisateur(nomUtilisateur);
+            serveur.connecterUtilisateur(nomUtilisateur);       // TODO ??
             etat = EtatsPossibles.MENU_INITIAL;
             afficherMenu = true;
 
@@ -94,6 +86,8 @@ public class ClientThread extends Thread {
             String line = " ";
             while (line != null) {
                 if(afficherMenu){
+                    nomConversationActuelle = "";
+                    tailleConversationActuelle = 0;
                     switch (etat){
                         case MENU_INITIAL:
                             afficherMenuInitial(socOut);
@@ -446,6 +440,8 @@ public class ClientThread extends Thread {
                 serveur.getListeConversations().get(serveur.getListeConversations().size()-1).setConversationGroupe(false);
                 serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(nomUtilisateur);
                 serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(line);
+                nomConversationActuelle = nomComversation;
+                tailleConversationActuelle = 0;
                 socOut.println("Création de la conversation avec '"+line+"'. Vous pouvez désormais communiquer avec "+line+".");
                 etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
             }
@@ -478,6 +474,8 @@ public class ClientThread extends Thread {
             }
         }
 
+        tailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
+
         //ajouter utilisateur si conv groupe
         if(serveur.getListeConversations().get(indexConversation).isConversationGroupe())
             serveur.getListeConversations().get(indexConversation).ajouterUtilisateur(nomUtilisateur);
@@ -495,15 +493,7 @@ public class ClientThread extends Thread {
 
         //tant que l'utilisateur est dans la conversation
         String line = "";
-        int nouvelleTailleConversationActuelle = 0;
         while(true){
-
-            // affichage des nouveaux messages
-            nouvelleTailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
-            if(nouvelleTailleConversationActuelle > tailleConversationActuelle){
-                serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, nouvelleTailleConversationActuelle-tailleConversationActuelle);
-                tailleConversationActuelle = nouvelleTailleConversationActuelle;
-            }
 
             // recuperation de l'entree utilisateur
             line = socIn.readLine();
@@ -527,12 +517,13 @@ public class ClientThread extends Thread {
             // sinon envoyer un message sur la conversation
             else{
                 serveur.getListeConversations().get(indexConversation).ajouterMessage(nomUtilisateur, line);
+                refreshConversation();
 
                 //Choix du ou des clients à qui on envoie le message
                 for (Map.Entry<String, ClientThread> client : EchoServerMultiThreaded.clientThreads.entrySet()) {
                     for(String participant : serveur.getListeConversations().get(indexConversation).getListeParticipants()) {
                         if((client.getKey().equals(participant)) && !(client.getKey() == nomUtilisateur)) {
-                            client.getValue().getSocout().println(nomUtilisateur + ":" + line);
+                            client.getValue().refreshConversation();
                         }
                     }
                 }
@@ -541,6 +532,26 @@ public class ClientThread extends Thread {
     }
     private PrintStream getSocout() {return this.socOut; }
     private String getnomUtilisateur() {return this.nomUtilisateur; }
+
+    // TODO Javadoc
+    public void refreshConversation(){
+
+        int indexConversation = 0;
+        for(int i = 0; i < serveur.getListeConversations().size(); i++){
+            if(serveur.getListeConversations().get(i).getNomConversation().equals(nomConversationActuelle)){
+                indexConversation = i;
+                break;
+            }
+        }
+
+        // affichage des nouveaux messages
+        int nouvelleTailleConversationActuelle = 0;
+        nouvelleTailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
+        if(nouvelleTailleConversationActuelle > tailleConversationActuelle){
+            serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, nouvelleTailleConversationActuelle-tailleConversationActuelle);
+            tailleConversationActuelle = nouvelleTailleConversationActuelle;
+        }
+    }
 }
 
   
