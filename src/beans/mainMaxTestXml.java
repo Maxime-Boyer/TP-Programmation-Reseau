@@ -33,16 +33,16 @@ public class mainMaxTestXml {
 
         XMLModifier xmlModifier = new XMLModifier();
 
-        xmlModifier.stockerConversation(conversation);
-        xmlModifier.stockerConversation(conversation2);
+        xmlModifier.stockerConversation(conversation, true);
+        xmlModifier.stockerConversation(conversation2, true);
 
-        xmlModifier.stockerMessage(conversation, new Message("Lola", "J'suis trop une folle"));
+        /*xmlModifier.stockerMessage(conversation, new Message("Lola", "J'suis trop une folle"));
 
         xmlModifier.stockerNouveauParticipant(conversation, "Lucas");
 
         xmlModifier.stockerNouveauParticipant(conversation2, "Max");
 
-        xmlModifier.stockerMessage(conversation2, new Message("Max", "J'suis trop un fou"));
+        xmlModifier.stockerMessage(conversation2, new Message("Max", "J'suis trop un fou"));*/
 
         //xmlModifier.afficherConversation(conversation2.getNomConversation());
 

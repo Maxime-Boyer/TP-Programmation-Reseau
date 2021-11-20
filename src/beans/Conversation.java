@@ -88,7 +88,7 @@ public class Conversation {
         }
         if(!utilisateurTrouve) {
             listeParticipants.add(nomUtilisateur);
-            xmlModifier.stockerNouveauParticipant(this, nomUtilisateur);
+            xmlModifier.stockerNouveauParticipant(this, nomUtilisateur, conversationGroupe);
         }
     }
 
@@ -100,7 +100,7 @@ public class Conversation {
     public void ajouterMessage(String nomUtilisateur, String corpsMessage){
         Message message = new Message(nomUtilisateur, corpsMessage);
         listeMessages.add(message);
-        xmlModifier.stockerMessage(this, message);
+        xmlModifier.stockerMessage(this, message, conversationGroupe);
     }
 
     /**
@@ -117,7 +117,7 @@ public class Conversation {
             e.printStackTrace();
         }
         listeMessages.add(message);
-        xmlModifier.stockerMessage(this, message);
+        xmlModifier.stockerMessage(this, message, conversationGroupe);
     }
 
     /**

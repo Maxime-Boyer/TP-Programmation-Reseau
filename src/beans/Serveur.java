@@ -31,6 +31,8 @@ public class Serveur {
         return listeConversations;
     }
 
+
+
     /**
      * Méthode permettant d'ajouter une conversation à la liste des conversations
      * @param nomConversation
@@ -39,7 +41,12 @@ public class Serveur {
         Conversation conversation = new Conversation(nomConversation);
         conversation.setConversationGroupe(isGroupe);
         listeConversations.add(conversation);
-        xmlModifier.stockerConversation(conversation);
+        if(isGroupe){
+
+        }else{
+
+        }
+        xmlModifier.stockerConversation(conversation, isGroupe);
     }
 
     /**
