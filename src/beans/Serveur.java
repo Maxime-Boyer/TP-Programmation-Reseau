@@ -48,11 +48,6 @@ public class Serveur {
         Conversation conversation = new Conversation(nomConversation);
         conversation.setConversationGroupe(isGroupe);
         listeConversations.add(conversation);
-        if(isGroupe){
-
-        }else{
-
-        }
         xmlModifier.stockerConversation(conversation, isGroupe);
     }
 

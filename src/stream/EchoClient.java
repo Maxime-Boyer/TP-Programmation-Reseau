@@ -40,7 +40,7 @@ public class EchoClient {
             socOut.println(nomUtilisateur);
             while(socIn.readLine().equals(EchoServerMultiThreaded.ERREUR_UTILISATEUR_CONNECTE)){
                 System.out.println("Utilisateur déjà connecté sur un autre appareil");
-                System.out.println("Veuillez le déconnecté de l'autre appareil pour vous connecter sur celui-ci");
+                System.out.println("Veuillez vous déconnecter de l'autre appareil pour vous connecter sur celui-ci");
                 System.out.println("Entrez à nouveau votre identifiant puis taper entrer");
                 nomUtilisateur=stdIn.readLine();
                 socOut.println(nomUtilisateur);
