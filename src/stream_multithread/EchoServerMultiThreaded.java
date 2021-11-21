@@ -9,6 +9,8 @@ public class EchoServerMultiThreaded  {
 
     //key = nomUtilisateur
     static HashMap<String, ClientThread> clientThreads = new HashMap<>();
+    public static final String ERREUR_UTILISATEUR_CONNECTE = "Erreur utilisateur connecte";
+    public static final String UTILISATEUR_CONNECTE = "Succès utilisateur connecte";
 
     /**
      * main du serveur: permet la synchro de l'ensemble des threads utilisateur
@@ -41,11 +43,11 @@ public class EchoServerMultiThreaded  {
                 //On recupere le username de l'utilisateur
                 String nomUtilisateur = socInClient.readLine();
                 while(serveur.getListeUtilisateurConnectes().contains(nomUtilisateur)){
-                    socOutClient.print("Erreur utilisateur déjà connecté");
-                    //nomUtilisateur = socInClient.readLine();
+                    socOutClient.println(ERREUR_UTILISATEUR_CONNECTE);
+                    nomUtilisateur = socInClient.readLine();
                 }
                 System.out.println(nomUtilisateur+" est connecté au serveur.");
-
+                socOutClient.println(UTILISATEUR_CONNECTE);
                 ClientThread ct = new ClientThread(clientSocket, serveur, nomUtilisateur, socInClient, socOutClient);
                 clientThreads.put(nomUtilisateur, ct);
                 ct.start();

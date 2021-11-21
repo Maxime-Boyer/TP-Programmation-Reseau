@@ -1,6 +1,8 @@
 
 package stream;
 
+import stream_multithread.EchoServerMultiThreaded;
+
 import java.io.*;
 import java.net.*;
 
@@ -36,7 +38,7 @@ public class EchoClient {
             System.out.println("Entrez votre identifiant puis taper entrer");
             nomUtilisateur=stdIn.readLine();
             socOut.println(nomUtilisateur);
-            while(socIn.readLine().equals("Erreur utilisateur déjà connecté")){
+            while(socIn.readLine().equals(EchoServerMultiThreaded.ERREUR_UTILISATEUR_CONNECTE)){
                 System.out.println("Utilisateur déjà connecté sur un autre appareil");
                 System.out.println("Veuillez le déconnecté de l'autre appareil pour vous connecter sur celui-ci");
                 System.out.println("Entrez à nouveau votre identifiant puis taper entrer");
