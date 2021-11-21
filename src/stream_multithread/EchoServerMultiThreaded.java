@@ -40,6 +40,10 @@ public class EchoServerMultiThreaded  {
 
                 //On recupere le username de l'utilisateur
                 String nomUtilisateur = socInClient.readLine();
+                while(serveur.getListeUtilisateurConnectes().contains(nomUtilisateur)){
+                    socOutClient.print("Erreur utilisateur déjà connecté");
+                    //nomUtilisateur = socInClient.readLine();
+                }
                 System.out.println(nomUtilisateur+" est connecté au serveur.");
 
                 ClientThread ct = new ClientThread(clientSocket, serveur, nomUtilisateur, socInClient, socOutClient);

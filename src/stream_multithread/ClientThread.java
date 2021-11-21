@@ -61,9 +61,9 @@ public class ClientThread extends Thread {
     public void run() {
 
         try {
-
             //connection de l'utilisateur
             serveur.connecterUtilisateur(nomUtilisateur);
+
             etat = EtatsPossibles.MENU_INITIAL;
             afficherMenu = true;
 

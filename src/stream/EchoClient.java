@@ -36,7 +36,13 @@ public class EchoClient {
             System.out.println("Entrez votre identifiant puis taper entrer");
             nomUtilisateur=stdIn.readLine();
             socOut.println(nomUtilisateur);
-
+            while(socIn.readLine().equals("Erreur utilisateur déjà connecté")){
+                System.out.println("Utilisateur déjà connecté sur un autre appareil");
+                System.out.println("Veuillez le déconnecté de l'autre appareil pour vous connecter sur celui-ci");
+                System.out.println("Entrez à nouveau votre identifiant puis taper entrer");
+                nomUtilisateur=stdIn.readLine();
+                socOut.println(nomUtilisateur);
+            }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + args[0]);
             System.exit(1);
