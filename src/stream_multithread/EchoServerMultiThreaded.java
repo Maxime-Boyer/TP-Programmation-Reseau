@@ -4,6 +4,7 @@ import beans.Serveur;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
+import java.util.Map;
 
 public class EchoServerMultiThreaded  {
 
@@ -40,17 +41,29 @@ public class EchoServerMultiThreaded  {
 
                 //On recupere le username de l'utilisateur
                 String nomUtilisateur = socInClient.readLine();
-                System.out.println(nomUtilisateur+" est connecté au serveur.");
 
+                System.out.println("on est la");
                 ClientThread ct = new ClientThread(clientSocket, serveur, nomUtilisateur, socInClient, socOutClient);
                 clientThreads.put(nomUtilisateur, ct);
                 ct.start();
+                /*if(serveur.getListeUtilisateurConnectes().contains(nomUtilisateur)){
+                    System.out.println(nomUtilisateur+" est déjà déjà connecté sur un autre appareil, pour pouvoir le connecter il faut le déconnecter sur l'autre appareil ");
+                }else {
+                    System.out.println(nomUtilisateur+" est connecté au serveur.");
+                    if(clientThreads.containsKey(nomUtilisateur)) {
+                        clientThreads.get(nomUtilisateur).start();
+                    }else {
+                        System.out.println("on est la");
+                        ClientThread ct = new ClientThread(clientSocket, serveur, nomUtilisateur, socInClient, socOutClient);
+                        clientThreads.put(nomUtilisateur, ct);
+                        ct.start();
+                    }
+                }*/
             }
         } catch (Exception e) {
             System.err.println("Error in EchoServer:" + e);
         }
     }
-
 }
 
   

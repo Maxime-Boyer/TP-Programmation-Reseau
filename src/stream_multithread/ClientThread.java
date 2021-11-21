@@ -118,8 +118,11 @@ public class ClientThread extends Thread {
                     line = socIn.readLine();
 
                     if(line.equals(nomUtilisateur)){
-                        System.out.println(nomUtilisateur+" est connecté au serveur.");
-                        utilisateurConnecte = true;
+                        if(!serveur.getListeUtilisateurConnectes().contains(nomUtilisateur)){
+                            System.out.println(nomUtilisateur+" est connecté au serveur.");
+                            serveur.getListeUtilisateurConnectes().add(nomUtilisateur);
+                            utilisateurConnecte = true;
+                        }
                     }
                 }
             }
@@ -225,6 +228,10 @@ public class ClientThread extends Thread {
         return nomConversationActuelle;
     }
 
+    public String getNomUtilisateur() {
+        return nomUtilisateur;
+    }
+
     /**
      * Récupère la saisie utilisateur suite au menu initial et redirige vers l'état demandé par l'utilisateur
      * @throws IOException: jette les exceptions liees aux I/O utilisateur
@@ -249,6 +256,7 @@ public class ClientThread extends Thread {
                 case 4:
                     System.out.println(nomUtilisateur+" a quitté le serveur.");
                     socOut.println("Deconnexion réussie.");
+                    serveur.getListeUtilisateurConnectes().remove(nomUtilisateur);
                     utilisateurConnecte = false;
                     break;
             }

@@ -8,6 +8,7 @@ public class Serveur {
     private XMLModifier xmlModifier = new XMLModifier();
     private ArrayList<String> listeNomsUtilisateurs = new ArrayList<>();
     private ArrayList<Conversation> listeConversations = new ArrayList<>();
+    private ArrayList<String> listeUtilisateurConnectes = new ArrayList<>();
 
     /**
      * Constructeur de Serveur initialisé au lancement du ServerMultiThreaded
@@ -31,7 +32,13 @@ public class Serveur {
         return listeConversations;
     }
 
-
+    /**
+     *
+     * Getter de la liste des utilisateurs connectés
+     */
+    public ArrayList<String> getListeUtilisateurConnectes() {
+        return listeUtilisateurConnectes;
+    }
 
     /**
      * Méthode permettant d'ajouter une conversation à la liste des conversations
@@ -58,6 +65,7 @@ public class Serveur {
             listeNomsUtilisateurs.add(nomUtilisateur);
             xmlModifier.stockerUtilisateurServeur(nomUtilisateur);
         }
+        listeUtilisateurConnectes.add(nomUtilisateur);
     }
 
     /**
