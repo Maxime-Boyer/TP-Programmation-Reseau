@@ -73,4 +73,9 @@ public class Serveur {
                 "listeNomsUtilisateurs=" + listeNomsUtilisateurs +
                 '}';
     }
+
+    public void ajouterMessageConversation(int indexConversation, String nomUtilisateur, String line){
+        Conversation conversation = this.getListeConversations().get(indexConversation);
+        conversation.ajouterMessage(nomUtilisateur, line);
+    }
 }

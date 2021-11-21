@@ -104,6 +104,17 @@ public class Conversation {
     }
 
     /**
+     * ajoute un message à la liste des messages en attentes pour les utilisateurs déconnecté
+     * @param nomUtilisateur: l'auteur du message
+     * @param corpsMessage: le message écris par l'auteur
+     */
+    public void ajouterMessageEnAttente(String nomUtilisateur, String corpsMessage){
+        Message message = new Message(nomUtilisateur, corpsMessage);
+        listeMessages.add(message);
+        xmlModifier.stockerMessage(this, message, conversationGroupe);
+    }
+
+    /**
      * ajoute un message à la conversation
      * @param nomUtilisateur: l'auteur du message
      * @param corpsMessage: le message écris par l'auteur
