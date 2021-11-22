@@ -38,14 +38,26 @@ public class Message {
         this.dateEnvoi = formatDate.parse(stringDateEnvoi);
     }
 
+    /**
+     * Méthode permettant de retourner le nom de l'auteur du message
+     * @return: le nom d'auteur du message
+     */
     public String getNomAuteur() {
         return nomAuteur;
     }
 
+    /**
+     * Méthode permettant de retourner le corps du message
+     * @return: le texte du message
+     */
     public String getCorpsMessage() {
         return corpsMessage;
     }
 
+    /**
+     * Méthode permettant de renvoyer la date d'envoi du message
+     * @return: la date d'envoi du message
+     */
     public String getDateEnvoi() {
         return formatDate.format(dateEnvoi);
     }

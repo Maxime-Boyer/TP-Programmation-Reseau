@@ -15,7 +15,4 @@ public class Utilisateur {
         this.nomUtilisateur = nomUtilisateur;
     }
 
-    public String getNomUtilisateur() {
-        return nomUtilisateur;
-    }
 }

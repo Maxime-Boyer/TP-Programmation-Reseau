@@ -44,28 +44,48 @@ public class Conversation {
         return nomConversation;
     }
 
+    /**
+     * Méthode retournant le nom de la conversation
+     * @return: le nom de la conversion
+     */
     public String getNomConversation() {
         return nomConversation;
     }
 
+    /**
+     * Méthode retournant la liste des participants de la conversation
+     * @return: la liste des participants de la conversation
+     */
     public ArrayList<String> getListeParticipants() {
         return listeParticipants;
     }
 
+    /**
+     * Méthode retournant la liste des messages de la conversation
+     * @return: la liste des messages de la conversation
+     */
     public ArrayList<Message> getListeMessages() {
         return listeMessages;
     }
 
+    /**
+     * Méthode permettant de tester le type de conversation
+     * @return
+     */
     public boolean isConversationGroupe() {
         return conversationGroupe;
     }
 
+    /**
+     * Méthode permettant de mettre à jour le type de la conversation
+     * @param conversationGroupe
+     */
     public void setConversationGroupe(boolean conversationGroupe) {
         this.conversationGroupe = conversationGroupe;
     }
 
     /**
-     * affiche la liste des utilisateurs participant à la conversation
+     * Affiche la liste des utilisateurs participant à la conversation
      */
     public void afficherListeParticipants() {
         System.out.println("\nUtilisateurs participant à la conversation: ");
@@ -98,17 +118,6 @@ public class Conversation {
      * @param corpsMessage: le message écris par l'auteur
      */
     public void ajouterMessage(String nomUtilisateur, String corpsMessage){
-        Message message = new Message(nomUtilisateur, corpsMessage);
-        listeMessages.add(message);
-        xmlModifier.stockerMessage(this, message, conversationGroupe);
-    }
-
-    /**
-     * ajoute un message à la liste des messages en attentes pour les utilisateurs déconnecté
-     * @param nomUtilisateur: l'auteur du message
-     * @param corpsMessage: le message écris par l'auteur
-     */
-    public void ajouterMessageEnAttente(String nomUtilisateur, String corpsMessage){
         Message message = new Message(nomUtilisateur, corpsMessage);
         listeMessages.add(message);
         xmlModifier.stockerMessage(this, message, conversationGroupe);
