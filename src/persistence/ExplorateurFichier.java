@@ -25,17 +25,17 @@ public class ExplorateurFichier {
         this.recursivePath = subFolder;
     }
 
-    public void list() {
-        this.listDirectory(this.initialpath);
-    }
-
+    /**
+     * Méthode permettant de recuperer tous les noms de fichiers dans le directory path
+     * @return: un tableau de fichier
+     */
     public File[] getNomDesFichiers() {
         File file = new File(this.initialpath);
         File[] files = file.listFiles();
         return files;
     }
 
-    private void listDirectory(String dir) {
+    /*private void listDirectory(String dir) {
         File file = new File(dir);
         File[] files = file.listFiles();
         if (files != null) {
@@ -48,9 +48,9 @@ public class ExplorateurFichier {
                     this.filecount++;
                 }
                 if (files[i].isDirectory() == true && this.recursivePath == true) {
-                    this.listDirectory(files[i].getAbsolutePath());
+                    //this.listDirectory(files[i].getAbsolutePath());
                 }
             }
         }
-    }
+    }*/
 }

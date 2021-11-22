@@ -21,7 +21,6 @@ public class ClientThread extends Thread {
     private boolean afficherMenu;
     private boolean utilisateurConnecte;
 
-    //Nathan
     private BufferedReader socIn;
     private PrintStream socOut;
 
@@ -226,10 +225,6 @@ public class ClientThread extends Thread {
 
     public String getNomConversationActuelle() {
         return nomConversationActuelle;
-    }
-
-    public String getNomUtilisateur() {
-        return nomUtilisateur;
     }
 
     /**
