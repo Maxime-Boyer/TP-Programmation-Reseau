@@ -7,7 +7,6 @@ import javax.xml.transform.stream.*;
 
 import beans.Conversation;
 import beans.Message;
-import beans.Utilisateur;
 import org.xml.sax.*;
 import org.w3c.dom.*;
 
@@ -17,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class XMLModifier {
 
