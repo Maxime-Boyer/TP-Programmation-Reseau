@@ -4,11 +4,9 @@ import beans.Conversation;
 import beans.Serveur;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 
 public class ClientThread extends Thread {
 
@@ -303,6 +301,7 @@ public class ClientThread extends Thread {
             socOut.println(" ");
             socOut.println("Entrez le nom de la conversation que vous souhaitez créer:");
             line = socIn.readLine();
+            line = line.replaceAll("[^a-zA-Z0-9]", "");
         }
 
         // rechercher si la conversation existe
