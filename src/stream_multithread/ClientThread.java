@@ -301,7 +301,7 @@ public class ClientThread extends Thread {
             socOut.println(" ");
             socOut.println("Entrez le nom de la conversation que vous souhaitez créer:");
             line = socIn.readLine();
-            line = line.replaceAll("[^a-zA-Z0-9]", "");
+            line = enleverCaracteresSpeciaux(line);
         }
 
         // rechercher si la conversation existe
@@ -564,6 +564,30 @@ public class ClientThread extends Thread {
             serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, nouvelleTailleConversationActuelle-tailleConversationActuelle, nomUtilisateur);
             tailleConversationActuelle = nouvelleTailleConversationActuelle;
         }
+    }
+
+    /**
+     * Méthode permettant de remplacer les caractères spéciaux d'une chaine String en caractères non spéciaux
+     * @param line: chaîne à transformer
+     * @return: chaîne texte transformée
+     */
+    public static String enleverCaracteresSpeciaux(String line) {
+        //On parcours chaque caractère du nom de la conversation et on le remplace par le caractère sans accent...
+        StringBuffer resultat = new StringBuffer();
+        if(line!=null && line.length()!=0) {
+            int index = -1;
+            char c = (char)0;
+            String chars= "àâäéèêëîïôöùûüç";
+            String replace= "aaaeeeeiioouuuc";
+            for(int i=0; i<line.length(); i++) {
+                c = line.charAt(i);
+                if( (index=chars.indexOf(c))!=-1 )
+                    resultat.append(replace.charAt(index));
+                else
+                    resultat.append(c);
+            }
+        }
+        return resultat.toString();
     }
 }
 
