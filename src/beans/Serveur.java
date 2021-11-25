@@ -2,19 +2,26 @@ package beans;
 
 import persistence.XMLModifier;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Serveur {
 
     private XMLModifier xmlModifier = new XMLModifier();
     private ArrayList<String> listeNomsUtilisateurs = new ArrayList<>();
-    private ArrayList<Conversation> listeConversations = new ArrayList<>();
+    private ArrayList<Conversation> listeConversationsPublic = new ArrayList<>();
+    private ArrayList<Conversation> listeConversationsPrivee = new ArrayList<>();
+
     private ArrayList<String> listeUtilisateurConnectes = new ArrayList<>();
 
     /**
      * Constructeur de Serveur initialisé au lancement du ServerMultiThreaded
      */
     public Serveur() {
-        listeConversations = xmlModifier.getAllConversation();
+        listeConversationsPublic = xmlModifier.getAllConversationPublic();
+        listeConversationsPrivee = xmlModifier.getAllConversationPrivee();
+        Collections.sort(listeConversationsPublic, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
+        Collections.sort(listeConversationsPrivee, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
         listeNomsUtilisateurs = xmlModifier.getListeParticipantsServeur();
     }
 
@@ -25,11 +32,12 @@ public class Serveur {
         return listeNomsUtilisateurs;
     }
 
-    /**
-     * Getter de la liste des noms de conversations
-     */
-    public ArrayList<Conversation> getListeConversations() {
-        return listeConversations;
+    public ArrayList<Conversation> getListeConversationsPublic() {
+        return listeConversationsPublic;
+    }
+
+    public ArrayList<Conversation> getListeConversationsPrivee() {
+        return listeConversationsPrivee;
     }
 
     /**
@@ -47,7 +55,11 @@ public class Serveur {
     public void ajouterConversations(String nomConversation, boolean isGroupe){
         Conversation conversation = new Conversation(nomConversation);
         conversation.setConversationGroupe(isGroupe);
-        listeConversations.add(conversation);
+        if(isGroupe){
+            listeConversationsPublic.add(conversation);
+        }else {
+            listeConversationsPrivee.add(conversation);
+        }
         xmlModifier.stockerConversation(conversation, isGroupe);
     }
 

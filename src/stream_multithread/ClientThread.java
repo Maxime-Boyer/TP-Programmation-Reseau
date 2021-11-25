@@ -18,6 +18,8 @@ public class ClientThread extends Thread {
     private int tailleConversationActuelle;
     private boolean afficherMenu;
     private boolean utilisateurConnecte;
+    private ArrayList<Conversation> listeConversationPriveeUtilisateur = new ArrayList<>();
+    private HashMap<String, Integer> messagesEnAbsence;
 
     private BufferedReader socIn;
     private PrintStream socOut;
@@ -153,39 +155,41 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
+    public void recupererConversationsUtilisateur(){
+        listeConversationPriveeUtilisateur.clear();
+        ArrayList<Conversation> listeConversationPrivee = serveur.getListeConversationsPrivee();
+        for(int i = 0; i < listeConversationPrivee.size(); i++){
+            if(!listeConversationPrivee.get(i).isConversationGroupe()){
+                if((listeConversationPrivee.get(i).getListeParticipants().get(0).equals(nomUtilisateur) || listeConversationPrivee.get(i).getListeParticipants().get(1).equals(nomUtilisateur))){
+                    listeConversationPriveeUtilisateur.add(listeConversationPrivee.get(i));
+                }
+            }
+        }
+    }
+
     /**
      * Méthode gérant l'affichage de la liste des conversations
      */
     public void afficherMenuListerConversations(){
-        ArrayList<Conversation> listeConversation = serveur.getListeConversations();
+        ArrayList<Conversation> listeConversation = serveur.getListeConversationsPublic();
         socOut.println(" ");
         socOut.println("Conversations de groupe:");
-        Collections.sort(listeConversation, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
-        int j = 1;
         for(int i = 0; i < listeConversation.size(); i++){
-            if(listeConversation.get(i).isConversationGroupe()){
-                socOut.println(" - " + j + " - " + listeConversation.get(i).getNomConversation());
-                j++;
-            }
+            socOut.println(" - " + i+1 + " - " + listeConversation.get(i).getNomConversation());
         }
 
-        j = 1;
         String utilisateur = "";
         socOut.println(" ");
         socOut.println("Utilisateurs avec qui vous avez une conversation:");
-        for(int i = 0; i < listeConversation.size(); i++){
-            if(!listeConversation.get(i).isConversationGroupe()){
-                if((listeConversation.get(i).getListeParticipants().get(0).equals(nomUtilisateur) || listeConversation.get(i).getListeParticipants().get(1).equals(nomUtilisateur))){
-                    if(listeConversation.get(i).getListeParticipants().get(0).equals(nomUtilisateur)){
-                        utilisateur = listeConversation.get(i).getListeParticipants().get(1);
-                    }
-                    else{
-                        utilisateur = listeConversation.get(i).getListeParticipants().get(0);
-                    }
-                    socOut.println(" - " + j + " - " + utilisateur);
-                    j++;
+        for(int i = 0; i < serveur.getListeConversationsPrivee().size(); i++) {
+            if((serveur.getListeConversationsPrivee().get(i).getListeParticipants().get(0).equals(nomUtilisateur) || serveur.getListeConversationsPrivee().get(i).getListeParticipants().get(1).equals(nomUtilisateur))) {
+                if (serveur.getListeConversationsPrivee().get(i).getListeParticipants().get(0).equals(nomUtilisateur)) {
+                    utilisateur = serveur.getListeConversationsPrivee().get(i).getListeParticipants().get(1);
+                } else {
+                    utilisateur = serveur.getListeConversationsPrivee().get(i).getListeParticipants().get(0);
                 }
             }
+            socOut.println(" - " + i+1 + " - " + utilisateur);
         }
 
         afficherMenu = false;
@@ -307,8 +311,8 @@ public class ClientThread extends Thread {
         // rechercher si la conversation existe
         Conversation conversation;
         boolean conversationExiste = false;
-        for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            conversation = serveur.getListeConversations().get(i);
+        for(int i = 0; i < serveur.getListeConversationsPublic().size(); i++){
+            conversation = serveur.getListeConversationsPublic().get(i);
 
             // si une conversation existe avec ce nom, retour état d'avant
             if(conversation.getNomConversation().equals(line)){
@@ -351,8 +355,8 @@ public class ClientThread extends Thread {
         // rechercher si la conversation existe
         Conversation conversation;
         boolean conversationExiste = false;
-        for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            conversation = serveur.getListeConversations().get(i);
+        for(int i = 0; i < serveur.getListeConversationsPublic().size(); i++){
+            conversation = serveur.getListeConversationsPublic().get(i);
 
             // si une conversation existe avec ce nom, retour état d'avant
             if(conversation.getNomConversation().equals(line)){
@@ -420,8 +424,8 @@ public class ClientThread extends Thread {
             Conversation conversation;
             boolean conversationExiste = false;
             String nomComversation = Conversation.determinerNomConversationAvec2NomsUtilisateurs(line, nomUtilisateur);
-            for(int i = 0; i < serveur.getListeConversations().size(); i++){
-                conversation = serveur.getListeConversations().get(i);
+            for(int i = 0; i < serveur.getListeConversationsPrivee().size(); i++){
+                conversation = serveur.getListeConversationsPrivee().get(i);
 
                 // si une conversation existe avec ce nom, retour état d'avant
                 if(conversation.getNomConversation().equals(nomComversation)){
@@ -441,8 +445,8 @@ public class ClientThread extends Thread {
             if(!conversationExiste){
                 // si elle n'existe pas, on crée la conversation
                 serveur.ajouterConversations(nomComversation, false);
-                serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(nomUtilisateur);
-                serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(line);
+                serveur.getListeConversationsPrivee().get(serveur.getListeConversationsPrivee().size()-1).ajouterUtilisateur(nomUtilisateur);
+                serveur.getListeConversationsPrivee().get(serveur.getListeConversationsPrivee().size()-1).ajouterUtilisateur(line);
                 nomConversationActuelle = nomComversation;
                 tailleConversationActuelle = 0;
                 socOut.println("Création de la conversation avec '"+line+"'. Vous pouvez désormais communiquer avec "+line+".");
@@ -466,19 +470,25 @@ public class ClientThread extends Thread {
         socOut.println(" ");
         socOut.println("---     Conversation " + nomConversationActuelle + "     ---");
 
+        boolean isGroup = false;
         // determiner la conversation dans laquelle se trouve l'utilisateur
         int indexConversation = 0;
-        for (int i = 0; i < serveur.getListeConversations().size(); i++) {
-            if (serveur.getListeConversations().get(i).getNomConversation().equals(nomConversationActuelle)) {
+        ArrayList<Conversation> listeConversation = null;
+        for (int i = 0; i < serveur.getListeConversationsPrivee().size(); i++) {
+            if (serveur.getListeConversationsPrivee().get(i).getNomConversation().equals(nomConversationActuelle)) {
                 indexConversation = i;
+                listeConversation = serveur.getListeConversationsPrivee();
+                isGroup = false;
+
                 break;
+
             }
         }
 
-        tailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
+        tailleConversationActuelle = listeConversation.get(indexConversation).getListeMessages().size();
 
         //ajouter utilisateur si conv groupe
-        Conversation conversation = serveur.getListeConversations().get(indexConversation);
+        Conversation conversation = listeConversation.get(indexConversation);
         if (conversation.isConversationGroupe()){
             boolean utilisateurTrouve = false;
             for (int j = 0; j < conversation.getListeParticipants().size(); j++) {
@@ -493,8 +503,8 @@ public class ClientThread extends Thread {
             }
         }
 
-        //afficher la conversaition
-        serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, 10, nomUtilisateur);
+        //afficher la conversation
+        conversation.afficherNMessages(socOut, 10, nomUtilisateur);
 
         // afficher les consignes à l'utilisateur
         socOut.println(" ");
@@ -520,21 +530,26 @@ public class ClientThread extends Thread {
                 break;
             }
 
+            if(isGroup){
+                listeConversation = serveur.getListeConversationsPublic();
+            }else {
+                listeConversation = serveur.getListeConversationsPrivee();
+            }
             // si entree = showAll afficher tout la conversation
             if(line.equals("showAll")){
                 socOut.println(" ");
                 socOut.println("---     Conversation "+nomConversationActuelle+"     ---");
-                tailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
-                serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, tailleConversationActuelle, nomUtilisateur);
+                tailleConversationActuelle = listeConversation.get(indexConversation).getListeMessages().size();
+                listeConversation.get(indexConversation).afficherNMessages(socOut, tailleConversationActuelle, nomUtilisateur);
             }
             // sinon envoyer un message sur la conversation
             else{
-                serveur.getListeConversations().get(indexConversation).ajouterMessage(nomUtilisateur, line);
+                listeConversation.get(indexConversation).ajouterMessage(nomUtilisateur, line);
                 refreshConversation();
 
                 //Choix du ou des clients à qui on envoie le message
                 for (Map.Entry<String, ClientThread> client : EchoServerMultiThreaded.clientThreads.entrySet()) {
-                    for(String participant : serveur.getListeConversations().get(indexConversation).getListeParticipants()) {
+                    for(String participant : listeConversation.get(indexConversation).getListeParticipants()) {
                         if((client.getKey().equals(participant)) && !(client.getKey() == nomUtilisateur) && client.getValue().getNomConversationActuelle().equals(nomConversationActuelle)) {
                             client.getValue().refreshConversation();
                         }
@@ -549,19 +564,31 @@ public class ClientThread extends Thread {
      */
     public void refreshConversation(){
 
+        ArrayList<Conversation> listeConversation = null;
         int indexConversation = 0;
-        for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            if(serveur.getListeConversations().get(i).getNomConversation().equals(nomConversationActuelle)){
+        boolean isGroup = false;
+        for (int i = 0; i < serveur.getListeConversationsPublic().size(); i++) {
+            if (serveur.getListeConversationsPublic().get(i).getNomConversation().equals(nomConversationActuelle)) {
                 indexConversation = i;
+                isGroup = true;
+                listeConversation = serveur.getListeConversationsPublic();
+                break;
+            }
+        }
+        for (int i = 0; i < serveur.getListeConversationsPrivee().size(); i++) {
+            if (serveur.getListeConversationsPrivee().get(i).getNomConversation().equals(nomConversationActuelle)) {
+                indexConversation = i;
+                listeConversation = serveur.getListeConversationsPrivee();
+                isGroup = false;
                 break;
             }
         }
 
         // affichage des nouveaux messages
         int nouvelleTailleConversationActuelle = 0;
-        nouvelleTailleConversationActuelle = serveur.getListeConversations().get(indexConversation).getListeMessages().size();
+        nouvelleTailleConversationActuelle = listeConversation.get(indexConversation).getListeMessages().size();
         if(nouvelleTailleConversationActuelle > tailleConversationActuelle){
-            serveur.getListeConversations().get(indexConversation).afficherNMessages(socOut, nouvelleTailleConversationActuelle-tailleConversationActuelle, nomUtilisateur);
+            listeConversation.get(indexConversation).afficherNMessages(socOut, nouvelleTailleConversationActuelle-tailleConversationActuelle, nomUtilisateur);
             tailleConversationActuelle = nouvelleTailleConversationActuelle;
         }
     }
@@ -588,6 +615,10 @@ public class ClientThread extends Thread {
             }
         }
         return resultat.toString();
+    }
+
+    public void deconnectionEnregistrementMessages(){
+
     }
 }
 

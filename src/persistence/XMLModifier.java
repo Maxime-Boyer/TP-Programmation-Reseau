@@ -397,7 +397,7 @@ public class XMLModifier {
      * Méthode permettant de récuperer toutes les conversations dans le serveur
      * @return: liste des conversations persistées en dure
      */
-    public ArrayList<Conversation> getAllConversation() {
+    public ArrayList<Conversation> getAllConversationPublic() {
 
         //On récupère tous les fichiers du package "dossier"
         ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/conversationPublicXML/", false);
@@ -454,11 +454,20 @@ public class XMLModifier {
                 }
             }
         }
+        return listeConversation;
+    }
+
+    /**
+     * Méthode permettant de récuperer toutes les conversations dans le serveur
+     * @return: liste des conversations persistées en dure
+     */
+    public ArrayList<Conversation> getAllConversationPrivee() {
 
         //On récupère tous les fichiers du package "dossier"
-        explorateurFichier = new ExplorateurFichier("src/conversationPriveeXML/", false);
-        listFichier = explorateurFichier.getNomDesFichiers();
-        fichierTrouve = false;
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/conversationPriveeXML/", false);
+        File[] listFichier = explorateurFichier.getNomDesFichiers();
+        boolean fichierTrouve = false;
+        ArrayList<Conversation> listeConversation = new ArrayList<>();
 
         //On recupère d'abord toutes les conversations privées
         for(int i = 0; i < listFichier.length; i++) {
