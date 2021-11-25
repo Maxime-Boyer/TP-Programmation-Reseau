@@ -1,6 +1,7 @@
 package stream_multithread;
 
 import beans.Conversation;
+import beans.Message;
 import beans.Serveur;
 
 import java.io.*;
@@ -19,7 +20,8 @@ public class ClientThread extends Thread {
     private boolean afficherMenu;
     private boolean utilisateurConnecte;
     private ArrayList<Conversation> listeConversationPriveeUtilisateur = new ArrayList<>();
-    private HashMap<String, Integer> messagesEnAbsence;
+    private HashMap<String, Integer> messagesEnAbsenceConversationsPublic;
+    private HashMap<String, Integer> messagesEnAbsenceConversationsPrivee;
 
     private BufferedReader socIn;
     private PrintStream socOut;
@@ -254,12 +256,15 @@ public class ClientThread extends Thread {
                     System.out.println(nomUtilisateur+" a quitté le serveur.");
                     socOut.println("Deconnexion réussie.");
                     serveur.getListeUtilisateurConnectes().remove(nomUtilisateur);
+                    deconnectionEnregistrementMessages();
                     utilisateurConnecte = false;
                     break;
             }
         }
         afficherMenu = true;
     }
+
+
 
     /**
      * Récupère la saisie utilisateur suite au menu conversation et redirige vers l'état demandé par l'utilisateur
@@ -470,7 +475,8 @@ public class ClientThread extends Thread {
         socOut.println(" ");
         socOut.println("---     Conversation " + nomConversationActuelle + "     ---");
 
-        boolean isGroup = false;
+        boolean isGroup = true;
+        boolean conversationFound = false;
         // determiner la conversation dans laquelle se trouve l'utilisateur
         int indexConversation = 0;
         ArrayList<Conversation> listeConversation = null;
@@ -479,9 +485,18 @@ public class ClientThread extends Thread {
                 indexConversation = i;
                 listeConversation = serveur.getListeConversationsPrivee();
                 isGroup = false;
-
+                conversationFound = true;
                 break;
-
+            }
+        }
+        if(!conversationFound) {
+            for (int i = 0; i < serveur.getListeConversationsPublic().size(); i++) {
+                if (serveur.getListeConversationsPublic().get(i).getNomConversation().equals(nomConversationActuelle)) {
+                    indexConversation = i;
+                    listeConversation = serveur.getListeConversationsPublic();
+                    isGroup = true;
+                    break;
+                }
             }
         }
 
@@ -503,8 +518,10 @@ public class ClientThread extends Thread {
             }
         }
 
-        //afficher la conversation
-        conversation.afficherNMessages(socOut, 10, nomUtilisateur);
+        if(afficherMessageEnAbsence(conversation)) {
+            //afficher la conversation
+            conversation.afficherNMessages(socOut, 10, nomUtilisateur);
+        }
 
         // afficher les consignes à l'utilisateur
         socOut.println(" ");
@@ -618,7 +635,59 @@ public class ClientThread extends Thread {
     }
 
     public void deconnectionEnregistrementMessages(){
+        recupererConversationsUtilisateur();
+        for(int i = 0; i < listeConversationPriveeUtilisateur.size(); i++){
+            Conversation conversation = listeConversationPriveeUtilisateur.get(i);
+            int idMessage = conversation.getListeMessages().size() - 1;
+            messagesEnAbsenceConversationsPrivee.put(conversation.getNomConversation(), idMessage);
+        }
+        for(int i = 0; i < serveur.getListeConversationsPublic().size(); i++){
+            Conversation conversation = serveur.getListeConversationsPublic().get(i);
+            int idMessage = conversation.getListeMessages().size() - 1;
+            messagesEnAbsenceConversationsPublic.put(conversation.getNomConversation(), idMessage);
+        }
+    }
 
+    public boolean afficherMessageEnAbsence(Conversation conversation){
+        Message message;
+        int debutBoucle = 0;
+        boolean listeVide = true;
+
+        if(conversation.getListeMessages().size() > 0){
+            if(conversation.isConversationGroupe()) {
+                if (messagesEnAbsenceConversationsPublic != null){
+                    if (messagesEnAbsenceConversationsPublic.containsKey(conversation.getNomConversation())) {
+                        debutBoucle = messagesEnAbsenceConversationsPublic.get(conversation.getNomConversation());
+                        messagesEnAbsenceConversationsPublic.remove(conversation.getNomConversation());
+                        listeVide = false;
+                    }
+                }
+            }else {
+                if (messagesEnAbsenceConversationsPrivee != null) {
+                    if (messagesEnAbsenceConversationsPrivee.containsKey(conversation.getNomConversation())) {
+                        debutBoucle = messagesEnAbsenceConversationsPrivee.get(conversation.getNomConversation());
+                        messagesEnAbsenceConversationsPrivee.remove(conversation.getNomConversation());
+                        ;
+                        listeVide = false;
+                    }
+                }
+            }
+        }
+
+        if(debutBoucle != 0 && !listeVide){
+
+            socOut.println("------ Pendant votre absence : ------");
+
+            for(int i = debutBoucle; i < conversation.getListeMessages().size(); i++){
+                message = conversation.getListeMessages().get(i);
+                socOut.println(" ");
+                String nomAuteur = message.getNomAuteur();
+                socOut.println(nomAuteur+" - "+message.getDateEnvoi());
+                socOut.println(message.getCorpsMessage());
+            }
+            socOut.println("-------------------------------------");
+        }
+        return listeVide;
     }
 }
 
