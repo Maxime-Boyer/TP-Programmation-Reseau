@@ -8,9 +8,9 @@ import java.util.Comparator;
 public class Serveur {
 
     private XMLModifier xmlModifier = new XMLModifier();
-    private ArrayList<String> listeNomsUtilisateurs = new ArrayList<>();
-    private ArrayList<Conversation> listeConversationsPublic = new ArrayList<>();
-    private ArrayList<Conversation> listeConversationsPrivee = new ArrayList<>();
+    private ArrayList<String> listeNomsUtilisateurs;
+    private ArrayList<Conversation> listeConversationsPublic;
+    private ArrayList<Conversation> listeConversationsPrivee;
 
     private ArrayList<String> listeUtilisateurConnectes = new ArrayList<>();
 
@@ -20,8 +20,8 @@ public class Serveur {
     public Serveur() {
         listeConversationsPublic = xmlModifier.getAllConversationPublic();
         listeConversationsPrivee = xmlModifier.getAllConversationPrivee();
-        Collections.sort(listeConversationsPublic, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
-        Collections.sort(listeConversationsPrivee, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
+        //Collections.sort(listeConversationsPublic, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
+        //Collections.sort(listeConversationsPrivee, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
         listeNomsUtilisateurs = xmlModifier.getListeParticipantsServeur();
     }
 

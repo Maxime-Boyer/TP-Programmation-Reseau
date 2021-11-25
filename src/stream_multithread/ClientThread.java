@@ -20,8 +20,8 @@ public class ClientThread extends Thread {
     private boolean afficherMenu;
     private boolean utilisateurConnecte;
     private ArrayList<Conversation> listeConversationPriveeUtilisateur = new ArrayList<>();
-    private HashMap<String, Integer> messagesEnAbsenceConversationsPublic;
-    private HashMap<String, Integer> messagesEnAbsenceConversationsPrivee;
+    private HashMap<String, Integer> messagesEnAbsenceConversationsPublic = new HashMap<>();
+    private HashMap<String, Integer> messagesEnAbsenceConversationsPrivee = new HashMap<>();
 
     private BufferedReader socIn;
     private PrintStream socOut;
