@@ -394,8 +394,8 @@ public class XMLModifier {
     }
 
     /**
-     * Méthode permettant de récuperer toutes les conversations dans le serveur
-     * @return: liste des conversations persistées en dure
+     * Méthode permettant de récuperer toutes les conversations publiques (entre deux utilisateurs) dans le serveur
+     * @return: liste des conversations publiques persistées en dure
      */
     public ArrayList<Conversation> getAllConversationPublic() {
 
@@ -458,8 +458,8 @@ public class XMLModifier {
     }
 
     /**
-     * Méthode permettant de récuperer toutes les conversations dans le serveur
-     * @return: liste des conversations persistées en dure
+     * Méthode permettant de récuperer toutes les conversations privées (entre deux utilisateurs) dans le serveur
+     * @return: liste des conversations privées persistées en dure
      */
     public ArrayList<Conversation> getAllConversationPrivee() {
 

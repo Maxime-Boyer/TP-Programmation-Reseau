@@ -20,8 +20,8 @@ public class Serveur {
     public Serveur() {
         listeConversationsPublic = xmlModifier.getAllConversationPublic();
         listeConversationsPrivee = xmlModifier.getAllConversationPrivee();
-        //Collections.sort(listeConversationsPublic, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
-        //Collections.sort(listeConversationsPrivee, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
+        Collections.sort(listeConversationsPublic, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
+        Collections.sort(listeConversationsPrivee, Comparator.comparing((Conversation conversation) -> conversation.getNomConversation()));
         listeNomsUtilisateurs = xmlModifier.getListeParticipantsServeur();
     }
 
@@ -32,10 +32,16 @@ public class Serveur {
         return listeNomsUtilisateurs;
     }
 
+    /**
+     * Getter de la liste des  conversations publiques
+     */
     public ArrayList<Conversation> getListeConversationsPublic() {
         return listeConversationsPublic;
     }
 
+    /**
+     * Getter de la liste des conversations privées
+     */
     public ArrayList<Conversation> getListeConversationsPrivee() {
         return listeConversationsPrivee;
     }

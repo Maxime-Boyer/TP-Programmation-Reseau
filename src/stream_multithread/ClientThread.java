@@ -157,6 +157,9 @@ public class ClientThread extends Thread {
         afficherMenu = false;
     }
 
+    /**
+     * Méthode permettant de récuperer les conversations privée de l'utilisateur seulement
+     */
     public void recupererConversationsUtilisateur(){
         listeConversationPriveeUtilisateur.clear();
         ArrayList<Conversation> listeConversationPrivee = serveur.getListeConversationsPrivee();
@@ -634,6 +637,9 @@ public class ClientThread extends Thread {
         return resultat.toString();
     }
 
+    /**
+     * Méthode permettant d'enregistrer les messages quand un utilisateur se déconnecte
+     */
     public void deconnectionEnregistrementMessages(){
         recupererConversationsUtilisateur();
         for(int i = 0; i < listeConversationPriveeUtilisateur.size(); i++){
@@ -648,6 +654,11 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Méthode permettant d'afficher les messages en absences quand un utilisateur n'est pas connecté
+     * @param conversation
+     * @return
+     */
     public boolean afficherMessageEnAbsence(Conversation conversation){
         Message message;
         int debutBoucle = 0;
