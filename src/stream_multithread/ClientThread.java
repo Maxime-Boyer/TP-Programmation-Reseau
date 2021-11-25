@@ -328,6 +328,19 @@ public class ClientThread extends Thread {
             etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
         }
 
+        //Algo stupide pour retrouver la conv que l'on vient juste de créer
+        for(int i = 0; i < serveur.getListeConversations().size(); i++){
+            conversation = serveur.getListeConversations().get(i);
+
+            // si une conversation existe avec ce nom, retour état d'avant
+            if(conversation.getNomConversation().equals(line)){
+                // ajout du client dans cette conversation s'il n'existe pas
+                System.out.println("ajout utilisateur " + nomUtilisateur);
+                conversation.ajouterUtilisateur(nomUtilisateur);
+                break;
+            }
+        }
+
         afficherMenu = true;
     }
 
@@ -360,7 +373,7 @@ public class ClientThread extends Thread {
                 nomConversationActuelle = line;
                 tailleConversationActuelle = conversation.getListeMessages().size();
 
-                // ajout du client dans cette conversation si il n'existe pas
+                // ajout du client dans cette conversation s'il n'existe pas
                 boolean utilisateurTrouve = false;
                 for(int j = 0; j < conversation.getListeParticipants().size(); j++){
                     if(conversation.getListeParticipants().get(j).equals(nomUtilisateur)){
