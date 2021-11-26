@@ -44,8 +44,9 @@ public class Serveur {
      * Méthode permettant d'ajouter une conversation à la liste des conversations
      * @param nomConversation
      */
-    public void ajouterConversations(String nomConversation, boolean isGroupe){
+    public void ajouterConversations(String nomConversation, boolean isGroupe, String nomUtilisateur){
         Conversation conversation = new Conversation(nomConversation);
+        conversation.ajouterUtilisateur(nomUtilisateur);
         conversation.setConversationGroupe(isGroupe);
         listeConversations.add(conversation);
         xmlModifier.stockerConversation(conversation, isGroupe);

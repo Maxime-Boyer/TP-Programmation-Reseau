@@ -321,24 +321,11 @@ public class ClientThread extends Thread {
 
         if(!conversationExiste){
             // si elle n'existe pas, on la crée
-            serveur.ajouterConversations(line, true);
+            serveur.ajouterConversations(line, true, nomUtilisateur);
             socOut.println("Conversation '"+line+"' créée.");
             nomConversationActuelle = line;
             tailleConversationActuelle = 0;
             etat = EtatsPossibles.PARLER_DANS_CONVERSATION;
-        }
-
-        //Algo stupide pour retrouver la conv que l'on vient juste de créer
-        for(int i = 0; i < serveur.getListeConversations().size(); i++){
-            conversation = serveur.getListeConversations().get(i);
-
-            // si une conversation existe avec ce nom, retour état d'avant
-            if(conversation.getNomConversation().equals(line)){
-                // ajout du client dans cette conversation s'il n'existe pas
-                System.out.println("ajout utilisateur " + nomUtilisateur);
-                conversation.ajouterUtilisateur(nomUtilisateur);
-                break;
-            }
         }
 
         afficherMenu = true;
@@ -453,7 +440,7 @@ public class ClientThread extends Thread {
 
             if(!conversationExiste){
                 // si elle n'existe pas, on crée la conversation
-                serveur.ajouterConversations(nomComversation, false);
+                serveur.ajouterConversations(nomComversation, false, nomUtilisateur);
                 serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(nomUtilisateur);
                 serveur.getListeConversations().get(serveur.getListeConversations().size()-1).ajouterUtilisateur(line);
                 nomConversationActuelle = nomComversation;
