@@ -333,7 +333,7 @@ public class ClientThread extends Thread {
 
         if(!conversationExiste){
             // si elle n'existe pas, on la crée
-            serveur.ajouterConversations(line, true);
+            serveur.ajouterConversations(line, true, nomUtilisateur);
             socOut.println("Conversation '"+line+"' créée.");
             nomConversationActuelle = line;
             tailleConversationActuelle = 0;
@@ -372,7 +372,7 @@ public class ClientThread extends Thread {
                 nomConversationActuelle = line;
                 tailleConversationActuelle = conversation.getListeMessages().size();
 
-                // ajout du client dans cette conversation si il n'existe pas
+                // ajout du client dans cette conversation s'il n'existe pas
                 boolean utilisateurTrouve = false;
                 for(int j = 0; j < conversation.getListeParticipants().size(); j++){
                     if(conversation.getListeParticipants().get(j).equals(nomUtilisateur)){
