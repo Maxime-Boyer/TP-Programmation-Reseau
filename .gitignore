@@ -8,7 +8,7 @@
 /dataSources.local.xml
 
 # Compiled class file
-*.class
+#*.class
 
 # Log file
 *.log
@@ -77,4 +77,4 @@ Thumbs.db
 
 /out
 
-*.xml
+#*.xml
