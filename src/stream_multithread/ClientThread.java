@@ -435,13 +435,14 @@ public class ClientThread extends Thread {
             for(int i = 0; i < serveur.getListeConversationsPrivee().size(); i++){
                 conversation = serveur.getListeConversationsPrivee().get(i);
 
-                // si une conversation existe avec ce nom, retour état d'avant
+                // si une conversation existe avec ce nom on la rejoint
                 if(conversation.getNomConversation().equals(nomComversation)){
                     conversationExiste = true;
                     nomConversationActuelle = nomComversation;
                     tailleConversationActuelle = conversation.getListeMessages().size();
 
                     // ajout du client dans cette conversation
+                    // TODO :  check
                     conversation.ajouterUtilisateur(nomUtilisateur);
 
                     socOut.println("Connexion à la conversation '"+nomComversation+"'...");
