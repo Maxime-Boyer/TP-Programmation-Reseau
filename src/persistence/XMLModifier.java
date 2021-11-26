@@ -25,7 +25,7 @@ public class XMLModifier {
      */
     public void stockerUtilisateurServeur(String nomUtilisateur){
         //On récupère la liste des fichiers du package donneesServeur
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/donneesServeur/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("doc/donneesServeur/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -37,7 +37,7 @@ public class XMLModifier {
 
                 fichierTrouve = true;
 
-                String file = "src/donneesServeur/" + nomFichier;
+                String file = "doc/donneesServeur/" + nomFichier;
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 try {
                     DocumentBuilder db = dbf.newDocumentBuilder();
@@ -127,7 +127,7 @@ public class XMLModifier {
 
                 // send DOM to file
                 tr.transform(new DOMSource(dom),
-                        new StreamResult(new FileOutputStream("src/donneesServeur/" + nomFichier)));
+                        new StreamResult(new FileOutputStream("doc/donneesServeur/" + nomFichier)));
 
             } catch (TransformerException te) {
                 System.out.println(te.getMessage());
@@ -156,7 +156,7 @@ public class XMLModifier {
         }
 
         //On récupère tous les fichiers du package "dossier"
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/" + dossier + "/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("doc/" + dossier + "/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -168,7 +168,7 @@ public class XMLModifier {
                 fichierTrouve = true;
                 try {
 
-                    String file = "src/" + dossier + "/" + nomFichier;
+                    String file = "doc/" + dossier + "/" + nomFichier;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     Document doc = db.parse(file);
@@ -234,7 +234,7 @@ public class XMLModifier {
             dossier = "conversationPriveeXML";
         }
         //On récupère tous les fichiers du package "dossier"
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/" + dossier + "/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("doc/" + dossier + "/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -246,7 +246,7 @@ public class XMLModifier {
                 fichierTrouve = true;
                 try {
 
-                    String file = "src/" + dossier + "/" + nomFichier;
+                    String file = "doc/" + dossier + "/" + nomFichier;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     Document doc = db.parse(file);
@@ -310,7 +310,7 @@ public class XMLModifier {
             dossier = "conversationPriveeXML";
         }
         //On récupère tous les fichiers du package "dossier"
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/"+ dossier +"/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("doc/"+ dossier +"/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
         //On cherche si le fichier correspondant à la conversation existe sinon on le créer
@@ -380,7 +380,7 @@ public class XMLModifier {
 
                     // send DOM to file
                     tr.transform(new DOMSource(dom),
-                            new StreamResult(new FileOutputStream("src/" + dossier + "/" + nomFichier + ".xml")));
+                            new StreamResult(new FileOutputStream("doc/" + dossier + "/" + nomFichier + ".xml")));
 
                 } catch (TransformerException te) {
                     System.out.println(te.getMessage());
@@ -400,7 +400,7 @@ public class XMLModifier {
     public ArrayList<Conversation> getAllConversation() {
 
         //On récupère tous les fichiers du package "dossier"
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/conversationPublicXML/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("doc/conversationPublicXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
         ArrayList<Conversation> listeConversation = new ArrayList<>();
@@ -417,7 +417,7 @@ public class XMLModifier {
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     // parse using the builder to get the DOM mapping of the
                     // XML file
-                    dom = db.parse("src/conversationPublicXML/" + listFichier[i].getName());
+                    dom = db.parse("doc/conversationPublicXML/" + listFichier[i].getName());
 
                     Element doc = dom.getDocumentElement();
 
@@ -456,7 +456,7 @@ public class XMLModifier {
         }
 
         //On récupère tous les fichiers du package "dossier"
-        explorateurFichier = new ExplorateurFichier("src/conversationPriveeXML/", false);
+        explorateurFichier = new ExplorateurFichier("doc/conversationPriveeXML/", false);
         listFichier = explorateurFichier.getNomDesFichiers();
         fichierTrouve = false;
 
@@ -472,7 +472,7 @@ public class XMLModifier {
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     // parse using the builder to get the DOM mapping of the
                     // XML file
-                    dom = db.parse("src/conversationPriveeXML/" + listFichier[i].getName());
+                    dom = db.parse("doc/conversationPriveeXML/" + listFichier[i].getName());
 
                     Element doc = dom.getDocumentElement();
 
@@ -521,7 +521,7 @@ public class XMLModifier {
         String nomFichier = "ListeDesParticipants.xml";
 
         //On recupère la liste des fichiers du package donneesServeur pour chercher le document ListeDesParticipants.xml
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/donneesServeur/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("doc/donneesServeur/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -538,7 +538,7 @@ public class XMLModifier {
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     // parse using the builder to get the DOM mapping of the
                     // XML file
-                    dom = db.parse("src/donneesServeur/" + nomFichier);
+                    dom = db.parse("doc/donneesServeur/" + nomFichier);
 
                     Element doc = dom.getDocumentElement();
 
@@ -569,7 +569,7 @@ public class XMLModifier {
 
         String nomFichier = nomConversation.replaceAll("\\s", "") + ".xml";
         //On récupère tous les fichiers du package conversationPublicXML
-        ExplorateurFichier explorateurFichier = new ExplorateurFichier("src/conversationPublicXML/", false);
+        ExplorateurFichier explorateurFichier = new ExplorateurFichier("doc/conversationPublicXML/", false);
         File[] listFichier = explorateurFichier.getNomDesFichiers();
         boolean fichierTrouve = false;
 
@@ -588,7 +588,7 @@ public class XMLModifier {
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     // parse using the builder to get the DOM mapping of the
                     // XML file
-                    dom = db.parse("src/conversationPublicXML/" + nomFichier);
+                    dom = db.parse("doc/conversationPublicXML/" + nomFichier);
 
                     Element doc = dom.getDocumentElement();
 
@@ -612,7 +612,7 @@ public class XMLModifier {
         //Si il n'existe pas on le cherche dans le package conversationPriveeXML
         if(!fichierTrouve){
             //On récupère tous les fichiers du package conversationPriveeXML
-            explorateurFichier = new ExplorateurFichier("src/conversationPriveeXML/", false);
+            explorateurFichier = new ExplorateurFichier("doc/conversationPriveeXML/", false);
             listFichier = explorateurFichier.getNomDesFichiers();
             for(int i = 0; i < listFichier.length; i++) {
                 //Si le fichier existe déjà on ajoute des informations à la conversation : messages
@@ -626,7 +626,7 @@ public class XMLModifier {
                         DocumentBuilder db = dbf.newDocumentBuilder();
                         // parse using the builder to get the DOM mapping of the
                         // XML file
-                        dom = db.parse("src/conversationPriveeXML/" + nomFichier);
+                        dom = db.parse("doc/conversationPriveeXML/" + nomFichier);
 
                         Element doc = dom.getDocumentElement();
 
