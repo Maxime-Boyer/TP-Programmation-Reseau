@@ -452,7 +452,7 @@ public class ClientThread extends Thread {
 
             if(!conversationExiste){
                 // si elle n'existe pas, on crée la conversation
-                serveur.ajouterConversations(nomComversation, false);
+                serveur.ajouterConversations(nomComversation, false, nomUtilisateur);
                 serveur.getListeConversationsPrivee().get(serveur.getListeConversationsPrivee().size()-1).ajouterUtilisateur(nomUtilisateur);
                 serveur.getListeConversationsPrivee().get(serveur.getListeConversationsPrivee().size()-1).ajouterUtilisateur(line);
                 nomConversationActuelle = nomComversation;
