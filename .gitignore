@@ -75,9 +75,4 @@ hs_err_pid*
 ehthumbs.db
 Thumbs.db
 
-.classes
-
-/classes
 /out
-
-*.xml

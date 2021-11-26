@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE conversation SYSTEM "conversation.dtd">
+<conversation nomConversation="Max_Thomas" typeConversation="privee">
+                            
+    
+    
+    
+    
+    
+    <listeParticipants>
+                                                
+        
+        
+        
+        
+        <participant>Thomas</participant>
+                                            
+        
+        
+        
+        
+        <participant>Max</participant>
+                                    
+    
+        
+        
+        <participant>Thomas</participant>
+                    
+        
+        <participant>Max</participant>
+            
+    </listeParticipants>
+                        
+
+
+    
+    
+    
+    <message dateEnvoi="2021-11-26 à 10h12" expediteur="Thomas">feef</message>
+            
+
+
+    <message dateEnvoi="2021-11-26 à 10h12" expediteur="Thomas">feef</message>
+</conversation>
